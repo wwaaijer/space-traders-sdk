@@ -141,5 +141,5 @@ npm install
 npm run fetch-spec
 npm run build
 # Bump version
-# Publish 
+npm publish --access public
 ```

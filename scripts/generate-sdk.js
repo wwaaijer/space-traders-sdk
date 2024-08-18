@@ -65,7 +65,7 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
     }
 
     if (hasQueryParameters) {
-      parameters.push(`query: operations['${operationId}']['parameters']['query']`);
+      parameters.push(`query?: operations['${operationId}']['parameters']['query']`);
     }
 
     if (hasRequestBody) {

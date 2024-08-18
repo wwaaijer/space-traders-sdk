@@ -54,7 +54,7 @@ export class SpaceTradersSdk {
    * @description Return a paginated list of all systems.
    */
   async getSystems(
-    query: operations['get-systems']['parameters']['query']
+    query?: operations['get-systems']['parameters']['query']
   ): Promise<operations['get-systems']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
@@ -84,7 +84,7 @@ export class SpaceTradersSdk {
    */
   async getSystemWaypoints(
     systemSymbol: operations['get-system-waypoints']['parameters']['path']['systemSymbol'],
-    query: operations['get-system-waypoints']['parameters']['query']
+    query?: operations['get-system-waypoints']['parameters']['query']
   ): Promise<operations['get-system-waypoints']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
@@ -192,7 +192,7 @@ export class SpaceTradersSdk {
    * @description Return a paginated list of all the factions in the game.
    */
   async getFactions(
-    query: operations['get-factions']['parameters']['query']
+    query?: operations['get-factions']['parameters']['query']
   ): Promise<operations['get-factions']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
@@ -230,7 +230,7 @@ export class SpaceTradersSdk {
    * @description Fetch agents details.
    */
   async getAgents(
-    query: operations['get-agents']['parameters']['query']
+    query?: operations['get-agents']['parameters']['query']
   ): Promise<operations['get-agents']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
@@ -257,7 +257,7 @@ export class SpaceTradersSdk {
    * @description Return a paginated list of all your contracts.
    */
   async getContracts(
-    query: operations['get-contracts']['parameters']['query']
+    query?: operations['get-contracts']['parameters']['query']
   ): Promise<operations['get-contracts']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
@@ -331,7 +331,7 @@ export class SpaceTradersSdk {
    * @description Return a paginated list of all of ships under your agent's ownership.
    */
   async getMyShips(
-    query: operations['get-my-ships']['parameters']['query']
+    query?: operations['get-my-ships']['parameters']['query']
   ): Promise<operations['get-my-ships']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',

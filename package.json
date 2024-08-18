@@ -1,0 +1,33 @@
+{
+  "name": "@wwaaijer/space-traders-sdk",
+  "version": "0.0.1",
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "fetch-spec": "node ./scripts/fetch-spec.js",
+    "generate-types": "openapi-typescript tmp/openapi-spec.json -o src/openapi-typescript-export.ts",
+    "generate-sdk": "node ./scripts/generate-sdk.js",
+    "transpile": "tsc",
+    "build": "npm run generate-types && npm run generate-sdk && npm run transpile"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.3.0",
+    "typescript": "^5.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wwaaijer/space-traders-sdk"
+  },
+  "license": "MIT",
+  "keywords": [
+    "spacetraders",
+    "space",
+    "traders",
+    "api",
+    "sdk",
+    "fetch",
+    "types",
+    "typed"
+  ]
+}

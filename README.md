@@ -1,13 +1,13 @@
 # Space Traders SDK
 
-This is a JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game made for (aspiring) software developers.  
+This is a JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game made for (aspiring) software developers.
 Just by performing HTTP requests you can trade goods, mine resources, and explore with your own fleet of space ships.
 
 **But there are already a bunch of SDKs out there, why another one?**
 
-This packages tries to provide a better developer experience than the OpenAPI Generator generated ones already out there.  
-Although this SDK is also generated from the OpenAPI spec, it is using [openapi-typescript](https://github.com/openapi-ts/openapi-typescript), only to generate types.  
-There is a custom script which generates the SDK code itself, referencing those generated types.  
+This packages tries to provide a better developer experience than the OpenAPI Generator generated ones already out there.
+Although this SDK is also generated from the OpenAPI spec, it is using [openapi-typescript](https://github.com/openapi-ts/openapi-typescript), only to generate types.
+There is a custom script which generates the SDK code itself, referencing those generated types.
 This provides a simple, lightweight SDK that feels more handmade and is easy to keep in sync with Space Traders API changes.
 
 ## Installation
@@ -37,7 +37,7 @@ Usage after registration: (simulating one of the tutorial steps, finding and pur
 ```typescript
 import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
 
-const api = new SpaceTradersSdk({ token });
+const api = new SpaceTradersSdk({ token: '<your token here>' });
 
 const agent = await api.getMyAgent();
 console.log(`Logged in as ${agent.symbol}, headquartered at ${agent.headquarters}`);
@@ -72,9 +72,9 @@ console.log(`Purchased mining drone: ${ship.symbol}`);
 
 ## Method overview
 
-All methods map 1:1 to the Space Traders API endpoints.  
-Names are based one the operation ID in the OpenAPI spec.  
-Path parameters are passed as arguments, query parameters and request bodies are passed as objects.  
+All methods map 1:1 to the Space Traders API endpoints.
+Names are based one the operation ID in the OpenAPI spec.
+Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
 If an endpoint only responds with a data object, the method will return that object.
 
 ```javascript

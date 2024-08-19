@@ -40,7 +40,7 @@ export class SpaceTradersSdk {
    *     If you are new to SpaceTraders, It is recommended to register with the COSMIC faction, a faction that is well connected to the rest of the universe. After registering, you should try our interactive [quickstart guide](https://docs.spacetraders.io/quickstart/new-game) which will walk you through basic API requests in just a few minutes.
    */
   async register(
-    requestBody: operations['register']['requestBody']['content']['application/json']
+    requestBody: Required<operations['register']>['requestBody']['content']['application/json']
   ): Promise<operations['register']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -178,7 +178,7 @@ export class SpaceTradersSdk {
   async supplyConstruction(
     systemSymbol: operations['supply-construction']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['supply-construction']['parameters']['path']['waypointSymbol'],
-    requestBody: operations['supply-construction']['requestBody']['content']['application/json']
+    requestBody: Required<operations['supply-construction']>['requestBody']['content']['application/json']
   ): Promise<operations['supply-construction']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -304,7 +304,7 @@ export class SpaceTradersSdk {
    */
   async deliverContract(
     contractId: operations['deliver-contract']['parameters']['path']['contractId'],
-    requestBody: operations['deliver-contract']['requestBody']['content']['application/json']
+    requestBody: Required<operations['deliver-contract']>['requestBody']['content']['application/json']
   ): Promise<operations['deliver-contract']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -347,7 +347,7 @@ export class SpaceTradersSdk {
    *     Shipyards typically offer ship types, which are predefined templates of ships that have dedicated roles. A template comes with a preset of an engine, a reactor, and a frame. It may also include a few modules and mounts.
    */
   async purchaseShip(
-    requestBody: operations['purchase-ship']['requestBody']['content']['application/json']
+    requestBody: Required<operations['purchase-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['purchase-ship']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -407,7 +407,7 @@ export class SpaceTradersSdk {
    */
   async shipRefine(
     shipSymbol: operations['ship-refine']['parameters']['path']['shipSymbol'],
-    requestBody: operations['ship-refine']['requestBody']['content']['application/json']
+    requestBody: Required<operations['ship-refine']>['requestBody']['content']['application/json']
   ): Promise<operations['ship-refine']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -498,7 +498,7 @@ export class SpaceTradersSdk {
    */
   async extractResources(
     shipSymbol: operations['extract-resources']['parameters']['path']['shipSymbol'],
-    requestBody: operations['extract-resources']['requestBody']['content']['application/json']
+    requestBody: Required<operations['extract-resources']>['requestBody']['content']['application/json']
   ): Promise<operations['extract-resources']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -530,7 +530,7 @@ export class SpaceTradersSdk {
    */
   async extractResourcesWithSurvey(
     shipSymbol: operations['extract-resources-with-survey']['parameters']['path']['shipSymbol'],
-    requestBody: operations['extract-resources-with-survey']['requestBody']['content']['application/json']
+    requestBody: Required<operations['extract-resources-with-survey']>['requestBody']['content']['application/json']
   ): Promise<operations['extract-resources-with-survey']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -545,7 +545,7 @@ export class SpaceTradersSdk {
    */
   async jettison(
     shipSymbol: operations['jettison']['parameters']['path']['shipSymbol'],
-    requestBody: operations['jettison']['requestBody']['content']['application/json']
+    requestBody: Required<operations['jettison']>['requestBody']['content']['application/json']
   ): Promise<operations['jettison']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -562,7 +562,7 @@ export class SpaceTradersSdk {
    */
   async jumpShip(
     shipSymbol: operations['jump-ship']['parameters']['path']['shipSymbol'],
-    requestBody: operations['jump-ship']['requestBody']['content']['application/json']
+    requestBody: Required<operations['jump-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['jump-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -581,7 +581,7 @@ export class SpaceTradersSdk {
    */
   async navigateShip(
     shipSymbol: operations['navigate-ship']['parameters']['path']['shipSymbol'],
-    requestBody: operations['navigate-ship']['requestBody']['content']['application/json']
+    requestBody: Required<operations['navigate-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['navigate-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -598,7 +598,7 @@ export class SpaceTradersSdk {
    */
   async patchShipNav(
     shipSymbol: operations['patch-ship-nav']['parameters']['path']['shipSymbol'],
-    requestBody: operations['patch-ship-nav']['requestBody']['content']['application/json']
+    requestBody: Required<operations['patch-ship-nav']>['requestBody']['content']['application/json']
   ): Promise<operations['patch-ship-nav']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'PATCH',
@@ -628,7 +628,7 @@ export class SpaceTradersSdk {
    */
   async warpShip(
     shipSymbol: operations['warp-ship']['parameters']['path']['shipSymbol'],
-    requestBody: operations['warp-ship']['requestBody']['content']['application/json']
+    requestBody: Required<operations['warp-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['warp-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -643,7 +643,7 @@ export class SpaceTradersSdk {
    */
   async sellCargo(
     shipSymbol: operations['sell-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: operations['sell-cargo']['requestBody']['content']['application/json']
+    requestBody: Required<operations['sell-cargo']>['requestBody']['content']['application/json']
   ): Promise<operations['sell-cargo']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -713,7 +713,7 @@ export class SpaceTradersSdk {
    */
   async refuelShip(
     shipSymbol: operations['refuel-ship']['parameters']['path']['shipSymbol'],
-    requestBody: operations['refuel-ship']['requestBody']['content']['application/json']
+    requestBody: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['refuel-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -734,7 +734,7 @@ export class SpaceTradersSdk {
    */
   async purchaseCargo(
     shipSymbol: operations['purchase-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: operations['purchase-cargo']['requestBody']['content']['application/json']
+    requestBody: Required<operations['purchase-cargo']>['requestBody']['content']['application/json']
   ): Promise<operations['purchase-cargo']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -753,7 +753,7 @@ export class SpaceTradersSdk {
    */
   async transferCargo(
     shipSymbol: operations['transfer-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: operations['transfer-cargo']['requestBody']['content']['application/json']
+    requestBody: Required<operations['transfer-cargo']>['requestBody']['content']['application/json']
   ): Promise<operations['transfer-cargo']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -804,7 +804,7 @@ export class SpaceTradersSdk {
    */
   async installMount(
     shipSymbol: operations['install-mount']['parameters']['path']['shipSymbol'],
-    requestBody: operations['install-mount']['requestBody']['content']['application/json']
+    requestBody: Required<operations['install-mount']>['requestBody']['content']['application/json']
   ): Promise<operations['install-mount']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -823,7 +823,7 @@ export class SpaceTradersSdk {
    */
   async removeMount(
     shipSymbol: operations['remove-mount']['parameters']['path']['shipSymbol'],
-    requestBody: operations['remove-mount']['requestBody']['content']['application/json']
+    requestBody: Required<operations['remove-mount']>['requestBody']['content']['application/json']
   ): Promise<operations['remove-mount']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',

@@ -4,7 +4,9 @@
  */
 
 import { BaseClient } from "./baseClient";
-import { operations } from "./openapi-typescript-export";
+import type { operations, components } from "./openapi-typescript-export";
+
+export type SpaceTradersSchemas = components['schemas'];
 
 export class SpaceTradersSdk {
 

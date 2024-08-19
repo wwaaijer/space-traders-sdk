@@ -1,14 +1,20 @@
 # Space Traders SDK
 
-This is a JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game made for (aspiring) software developers.
-Just by performing HTTP requests you can trade goods, mine resources, and explore with your own fleet of space ships.
+A JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game build for (aspiring) software developers.
+Simply use HTTP requests to trade goods, mine resources, and explore the universe with your own fleet of spaceships.
+
+**Features**
+
+* Complete and fully typed
+* Simple and lightweight
 
 **But there are already a bunch of SDKs out there, why another one?**
 
-This packages tries to provide a better developer experience than the OpenAPI Generator generated ones already out there.
-Although this SDK is also generated from the OpenAPI spec, it is using [openapi-typescript](https://github.com/openapi-ts/openapi-typescript), only to generate types.
-There is a custom script which generates the SDK code itself, referencing those generated types.
-This provides a simple, lightweight SDK that feels more handmade and is easy to keep in sync with Space Traders API changes.
+This package focuses on improving the developer experience compared to existing SDKs.
+Most other packages are generated automatically using the OpenAPI Generator CLI, which can lead to less user-friendly interfaces.
+While this SDK also uses the OpenAPI spec, it only relies on [openapi-typescript](https://github.com/openapi-ts/openapi-typescript) to generate types.
+A custom script generates the SDK code itself.
+This approach results in a simpler, more lightweight SDK that’s still easy to maintain and keep aligned with future changes to the Space Traders API.
 
 ## Installation
 
@@ -32,7 +38,7 @@ const token = registerResponse.token;
 console.log(token);
 ```
 
-Usage after registration: (simulating one of the tutorial steps, finding and purchasing a mining drone)
+Usage after registration (simulating one of the tutorial steps, finding and purchasing a mining drone):
   
 ```typescript
 import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
@@ -68,6 +74,17 @@ const purchaseResponse = await api.purchaseShip({
 
 const ship = purchaseResponse.ship;
 console.log(`Purchased mining drone: ${ship.symbol}`);
+```
+
+All `components.schemas` mentioned in the API spec are exported as types in the `SpaceTradersSchemas` interface.
+For instance, this can be used to type your function arguments working with Space Trader entities.
+
+```typescript
+import type { SpaceTradersSchemas } from '@wwaaijer/space-traders-sdk';
+
+export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
+  return agent.credits;
+}
 ```
 
 ## Method overview

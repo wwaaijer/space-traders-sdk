@@ -1,7 +1,6 @@
 # Space Traders SDK
 
 A JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game build for (aspiring) software developers.
-Simply use HTTP requests to trade goods, mine resources, and explore the universe with your own fleet of spaceships.
 
 **Features**
 
@@ -89,7 +88,7 @@ export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
 
 ## Rate limiting
 
-Currently there is a very basic rate limiting set up.
+Currently there is very basic rate limiting set up.
 Every instance of `SpaceTradersSdk` will only execute a request every 0.5 seconds.
 
 ## Method overview

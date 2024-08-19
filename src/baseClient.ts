@@ -1,9 +1,14 @@
+import { RateLimiter } from "./rateLimiter";
+
 const baseUrl = 'https://api.spacetraders.io/v2';
 
 export class BaseClient {
   private token?: string;
+  private rateLimiter: RateLimiter;
 
   constructor(options?: BaseClientOptions) {
+    this.rateLimiter = new RateLimiter();
+
     if (!options) {
       return;
     }
@@ -34,7 +39,7 @@ export class BaseClient {
       fetchOptions.body = JSON.stringify(options.requestBody);
     }
 
-    const response = await fetch(url, fetchOptions);
+    const response = await this.rateLimiter.run(() => fetch(url, fetchOptions));
 
     if (response.ok) {
       const data = await response.json();

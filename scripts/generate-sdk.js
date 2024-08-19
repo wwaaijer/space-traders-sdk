@@ -6,7 +6,7 @@ const fs = require('fs');
 //        Currently not even using the whole paths object/interface
 //        Switch to the Node API of openapi-typescript and strip that whole section from the `ts.node[]` return value?
 // [ ] Error throwing?
-// [ ] Rate limiting?
+// [ ] Proper rate limiting?
 // [ ] Auto generate the method overview in the README?
 // [ ] Use ts.nodes like openapi-typescript does?  
 

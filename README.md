@@ -87,6 +87,11 @@ export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
 }
 ```
 
+## Rate limiting
+
+Currently there is a very basic rate limiting set up.
+Every instance of `SpaceTradersSdk` will only execute a request every 0.5 seconds.
+
 ## Method overview
 
 All methods map 1:1 to the Space Traders API endpoints.

@@ -1,55 +1,59 @@
+import { SpaceTradersOptions } from ".";
 import { RateLimiter } from "./rateLimiter";
+import { SpaceTradersRequest } from "./types";
 
 const baseUrl = 'https://api.spacetraders.io/v2';
 
 export class BaseClient {
-  private token?: string;
+  private options?: SpaceTradersOptions;
   private limiter: RateLimiter;
 
-  constructor(options?: BaseClientOptions) {
+  constructor(options?: SpaceTradersOptions) {
+    this.options = options;
     this.limiter = new RateLimiter();
-
-    if (!options) {
-      return;
-    }
-
-    if (options.token) {
-      this.token = options.token;
-    }
   }
 
-  async request(options: BaseClientRequestOptions) {  
-    const urlParts = [baseUrl, options.path];
-    if (options.query) {
-      urlParts.push(`?${buildQueryString(options.query)}`);
+  async request(request: SpaceTradersRequest) {
+    if (this.options?.onRequest) {
+      this.options.onRequest(request);
+    }
+
+    const urlParts = [baseUrl, request.path];
+    if (request.query) {
+      urlParts.push(`?${buildQueryString(request.query)}`);
     }
     const url = urlParts.join('');
 
     const fetchOptions: RequestInit = {
-      method: options.method,
+      method: request.method,
       headers: {},
     };
 
-    if (this.token) {
-      fetchOptions.headers['Authorization'] = `Bearer ${this.token}`;
+    if (this.options?.token) {
+      fetchOptions.headers['Authorization'] = `Bearer ${this.options.token}`;
     }
 
-    if (options.requestBody) {
+    if (request.requestBody) {
       fetchOptions.headers['Content-Type'] = 'application/json';
-      fetchOptions.body = JSON.stringify(options.requestBody);
+      fetchOptions.body = JSON.stringify(request.requestBody);
     }
 
     const response = await this.limiter.enqueue(() => fetch(url, fetchOptions));
 
     if (response.ok) {
-      const data = await response.json();
-      const dataKeys = Object.keys(data);
+      const responseBody = await response.json();
 
-      if (dataKeys.length === 1 && dataKeys[0] === 'data') {
-        return data.data;
+      if (this.options?.onResponse) {
+        this.options.onResponse({ request, responseBody });
       }
 
-      return data;
+      const responseKeys = Object.keys(responseBody);
+
+      if (responseKeys.length === 1 && responseKeys[0] === 'data') {
+        return responseBody.data;
+      }
+
+      return responseBody;
     } else {
       console.log(response);
       throw new Error(`Request failed with status ${response.status}`);
@@ -57,18 +61,7 @@ export class BaseClient {
   }
 }
 
-export interface BaseClientOptions {
-  token?: string;
-}
-
-export interface BaseClientRequestOptions {
-  method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
-  path: string;
-  query?: { [key: string]: string | number | boolean | Array<string | number | boolean> };
-  requestBody?: any;
-}
-
-function buildQueryString(query: BaseClientRequestOptions['query']) {
+function buildQueryString(query: SpaceTradersRequest['query']) {
   return Object.entries(query)
     .map(([key, value]) => {
       if (Array.isArray(value)) {

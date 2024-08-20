@@ -8,7 +8,9 @@ const fs = require('fs');
 // [ ] Error throwing?
 // [ ] Proper rate limiting?
 // [ ] Auto generate the method overview in the README?
-// [ ] Use ts.nodes like openapi-typescript does?  
+// [ ] Use ts.nodes like openapi-typescript does?
+// [ ] Operation logging v.s. request logging? `onOperation` and `onResult`?
+// [ ] `onError` option?
 
 const output = [
   '/**',
@@ -17,15 +19,14 @@ const output = [
   ' */',
   '',
   'import { BaseClient } from "./baseClient";',
-  'import type { operations, components } from "./openapi-typescript-export";',
-  '',
-  'export type SpaceTradersSchemas = components[\'schemas\'];',
+  'import type { operations } from "./openapi-typescript-export";',
+  'import type { SpaceTradersOptions } from "./types";',
   '',
   'export class SpaceTradersSdk {',
   '',
   '  private client: BaseClient;',
   '',
-  '  constructor(options?: SpaceTradersSdkOptions) {',
+  '  constructor(options?: SpaceTradersOptions) {',
   '    this.client = new BaseClient(options);',
   '  }',
 ];
@@ -144,13 +145,9 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
 output.push(
   '}',
   '',
-  'export interface SpaceTradersSdkOptions {',
-  '  token?: string;',
-  '}',
-  '',
 );
 
-fs.writeFileSync('./src/index.ts', output.join('\n'));
+fs.writeFileSync('./src/sdk.ts', output.join('\n'));
 
 function kebabToCamel(kebab) {
   return kebab.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());

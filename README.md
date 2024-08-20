@@ -91,6 +91,27 @@ export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
 Currently there is very basic rate limiting set up.
 Every instance of `SpaceTradersSdk` will only execute a request every 0.5 seconds.
 
+## Logging
+
+Requests and responses can be viewed by setting a callback for the `onRequest` and/or `onResponse` options.
+These callbacks will receive all request made by the `SpaceTradersSdk` instance or any response received by the instance. 
+
+```ts
+import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
+
+const api = new SpaceTradersSdk({
+  onRequest(request) {
+    console.log(request);
+  },
+  onResponse(response) {
+    console.log(response);
+  },
+});
+
+await api.getStatus();
+// Will result in a log for the request and the response
+```
+
 ## Method overview
 
 All methods map 1:1 to the Space Traders API endpoints.

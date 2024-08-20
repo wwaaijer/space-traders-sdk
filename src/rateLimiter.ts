@@ -16,18 +16,20 @@ export class RateLimiter {
   }
 
   private ensureWorking() {
-    if (this.timer == null) {
-      this.timer = setInterval(
-        () => {
-          if (!this.work()) {
-            this.stop();
-          }
-        },
-        this.timeout,
-      );
-
-      this.work();
+    if (this.timer != null) {
+      return;
     }
+
+    this.timer = setInterval(
+      () => {
+        if (!this.work()) {
+          this.stop();
+        }
+      },
+      this.timeout,
+    );
+
+    this.work();
   }
 
   private work() {

@@ -56,7 +56,7 @@ export class BaseClient {
       return responseBody;
     } else {
       console.log(response);
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new Error(`Request failed with status ${response.status} and response body ${await response.text()}`);
     }
   }
 }

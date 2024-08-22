@@ -4,6 +4,7 @@
  */
 
 import { BaseClient } from "./baseClient";
+import { spyOnOperationCalls } from "./spyOnOperations";
 import type { operations } from "./openapi-typescript-export";
 import type { SpaceTradersOptions } from "./types";
 
@@ -13,6 +14,9 @@ export class SpaceTradersSdk {
 
   constructor(options?: SpaceTradersOptions) {
     this.client = new BaseClient(options);
+    if (options?.onOperationStart || options?.onOperationResult) {
+      spyOnOperationCalls(this, options.onOperationStart, options.onOperationResult)
+    }
   }
 
   /**

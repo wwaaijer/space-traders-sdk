@@ -1,7 +1,11 @@
+import type { SpaceTradersOperationResult, SpaceTradersOperationStart } from "./spyOnOperations";
+
 export interface SpaceTradersOptions {
   token?: string;
   onRequest?: (request: SpaceTradersRequest) => void;
   onResponse?: (response: SpaceTradersResponse) => void;
+  onOperationStart?: (operation: SpaceTradersOperationStart) => void;
+  onOperationResult?: (operation: SpaceTradersOperationResult) => void;
 }
 
 export interface SpaceTradersRequest {

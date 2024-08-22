@@ -9,7 +9,6 @@ const fs = require('fs');
 // [ ] Proper rate limiting?
 // [ ] Auto generate the method overview in the README?
 // [ ] Use ts.nodes like openapi-typescript does?
-// [ ] Operation logging v.s. request logging? `onOperation` and `onResult`?
 // [ ] `onError` option?
 
 const output = [
@@ -19,6 +18,7 @@ const output = [
   ' */',
   '',
   'import { BaseClient } from "./baseClient";',
+  'import { spyOnOperationCalls } from "./spyOnOperations";',
   'import type { operations } from "./openapi-typescript-export";',
   'import type { SpaceTradersOptions } from "./types";',
   '',
@@ -28,17 +28,18 @@ const output = [
   '',
   '  constructor(options?: SpaceTradersOptions) {',
   '    this.client = new BaseClient(options);',
+  '    if (options?.onOperationStart || options?.onOperationResult) {',
+  '      spyOnOperationCalls(this, options.onOperationStart, options.onOperationResult)',
+  '    }',
   '  }',
 ];
 
 for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
-
   
   for (const [method, operationDefinition] of Object.entries(pathDefinition)) {
     if (method === 'parameters') {
       continue;
     }
-
     
     const operationId = operationDefinition.operationId;
     const operationName = kebabToCamel(operationId);

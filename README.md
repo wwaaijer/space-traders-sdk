@@ -101,15 +101,60 @@ import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
 
 const api = new SpaceTradersSdk({
   onRequest(request) {
-    console.log(request);
+    console.log('Request:', request);
   },
   onResponse(response) {
-    console.log(response);
+    console.log('Response:', response);
   },
 });
 
 await api.getStatus();
-// Will result in a log for the request and the response
+// Request: {
+//   method: 'GET',
+//   path: '/',
+//   query: undefined,
+//   requestBody: undefined,
+// }
+// Response: {
+//   request: {
+//     method: 'GET',
+//     path: '/',
+//     query: undefined,
+//     requestBody: undefined,
+//   },
+//   responseBody: { ... } 
+// }
+```
+
+In a similar fashion all operation calls and their results can be viewed as well.
+Supply a `onOperationStart` or `onOperationResult` callback if you want to keep track of either:
+```ts
+import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
+
+const api = new SpaceTradersSdk({
+  onOperationStart(operation) {
+    console.log('Operation start:', operation);
+  },
+  onOperationResult(operation) {
+    console.log('Operation result:', operation);
+
+    // Bonus! `operation` is typed (for both methods)
+    if (operation.operationName === 'getStatus') {
+      operation.result.announcements[0].title; // Is known to TypeScript to be a string
+    }
+  },
+});
+
+await api.getStatus();
+// Operation start: {
+//   operationName: 'getStatus',
+//   arguments: [],
+// }
+// Operation result: {
+//   operationName: 'getStatus',
+//   arguments: [],
+//   result: { ... } 
+// }
 ```
 
 ## Method overview
@@ -179,9 +224,9 @@ repairShip(shipSymbol)
 
 ## Regenerating the SDK source code
 ```shell
+# Bump version
 npm install
 npm run fetch-spec
 npm run build
-# Bump version
 npm publish --access public
 ```

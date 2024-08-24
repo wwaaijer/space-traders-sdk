@@ -86,6 +86,26 @@ export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
 }
 ```
 
+## Errors
+
+To handle certain expected errors in your logic you can test for `SpaceTradersError`s and identify them with `SpaceTradersErrorCode`.
+See https://docs.spacetraders.io/api-guide/response-errors for more information.
+
+```ts
+import { SpaceTradersError, SpaceTradersErrorCode } from '@wwaaijer/space-traders-sdk';
+
+try {
+  await api.createSurvey(shipSymbol);
+} catch(error) {
+  if (error instanceof SpaceTradersError) {
+    if (error.code === SpaceTradersErrorCode.shipSurveyWaypointTypeError) {
+      const allowed = error.data.waypointTypes; // Use error data returned by the API
+      console.log(`Yikes, should have surveyed one of ${allowed.join(', ')} instead`);
+    }
+  }
+}
+```
+
 ## Rate limiting
 
 Currently there is very basic rate limiting set up.

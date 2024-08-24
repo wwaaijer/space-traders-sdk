@@ -2,8 +2,7 @@ const openApiDoc = require('../tmp/openapi-spec.json');
 const fs = require('fs');
 
 // TODO:
-// [ ] Error research
-// [ ] Error throwing w/ typed response attached? 
+// [ ] Rate limiting errors
 // [ ] 1.0.0
 // [ ] Paged endpoint fetcher
 // [ ] Introduce extra methods using the paged fetcher?

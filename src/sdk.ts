@@ -4,8 +4,9 @@
  */
 
 import { BaseClient } from "./baseClient";
-import { spyOnOperationCalls } from "./spyOnOperations";
+import { systemSymbolFromWaypointSymbol } from "./helpers";
 import type { operations } from "./openapi-typescript-export";
+import { spyOnOperationCalls } from "./spyOnOperations";
 import type { SpaceTradersOptions } from "./types";
 
 export class SpaceTradersSdk {
@@ -105,9 +106,9 @@ export class SpaceTradersSdk {
    *     If the waypoint is uncharted, it will return the 'Uncharted' trait instead of its actual traits.
    */
   async getWaypoint(
-    systemSymbol: operations['get-waypoint']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['get-waypoint']['parameters']['path']['waypointSymbol']
   ): Promise<operations['get-waypoint']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'GET',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}`,
@@ -121,9 +122,9 @@ export class SpaceTradersSdk {
    *     Send a ship to the waypoint to access trade good prices and recent transactions. Refer to the [Market Overview page](https://docs.spacetraders.io/game-concepts/markets) to gain better a understanding of the market in the game.
    */
   async getMarket(
-    systemSymbol: operations['get-market']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['get-market']['parameters']['path']['waypointSymbol']
   ): Promise<operations['get-market']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'GET',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/market`,
@@ -135,9 +136,9 @@ export class SpaceTradersSdk {
    * @description Get the shipyard for a waypoint. Requires a waypoint that has the `Shipyard` trait to use. Send a ship to the waypoint to access data on ships that are currently available for purchase and recent transactions.
    */
   async getShipyard(
-    systemSymbol: operations['get-shipyard']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['get-shipyard']['parameters']['path']['waypointSymbol']
   ): Promise<operations['get-shipyard']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'GET',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/shipyard`,
@@ -151,9 +152,9 @@ export class SpaceTradersSdk {
    *     Waypoints connected to this jump gate can be 
    */
   async getJumpGate(
-    systemSymbol: operations['get-jump-gate']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['get-jump-gate']['parameters']['path']['waypointSymbol']
   ): Promise<operations['get-jump-gate']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'GET',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/jump-gate`,
@@ -165,9 +166,9 @@ export class SpaceTradersSdk {
    * @description Get construction details for a waypoint. Requires a waypoint with a property of `isUnderConstruction` to be true.
    */
   async getConstruction(
-    systemSymbol: operations['get-construction']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['get-construction']['parameters']['path']['waypointSymbol']
   ): Promise<operations['get-construction']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'GET',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction`,
@@ -181,10 +182,10 @@ export class SpaceTradersSdk {
    *     The good must be in your ship's cargo. The good will be removed from your ship's cargo and added to the construction site's materials.
    */
   async supplyConstruction(
-    systemSymbol: operations['supply-construction']['parameters']['path']['systemSymbol'],
     waypointSymbol: operations['supply-construction']['parameters']['path']['waypointSymbol'],
     requestBody: Required<operations['supply-construction']>['requestBody']['content']['application/json']
   ): Promise<operations['supply-construction']['responses']['201']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
     return this.client.request({
       method: 'POST',
       path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction/supply`,

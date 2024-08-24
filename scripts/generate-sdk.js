@@ -2,13 +2,16 @@ const openApiDoc = require('../tmp/openapi-spec.json');
 const fs = require('fs');
 
 // TODO:
-// [ ] systemSymbol from waypointSymbol?
+// [ ] Error research
+// [ ] Error throwing w/ typed response attached? 
+// [ ] 1.0.0
 // [ ] Paged endpoint fetcher
+// [ ] Introduce extra methods using the paged fetcher?
 // [ ] Auto generate the method overview in the README?
+// ...
 // [ ] Are there settings to fine-tune for openapi-typescript?
 //        Currently not even using the whole paths object/interface
 //        Switch to the Node API of openapi-typescript and strip that whole section from the `ts.node[]` return value?
-// [ ] Error throwing?
 // [ ] Proper rate limiting?
 // [ ] Use ts.nodes like openapi-typescript does?
 // [ ] `onError` option?
@@ -20,8 +23,9 @@ const output = [
   ' */',
   '',
   'import { BaseClient } from "./baseClient";',
-  'import { spyOnOperationCalls } from "./spyOnOperations";',
+  'import { systemSymbolFromWaypointSymbol } from "./helpers";',
   'import type { operations } from "./openapi-typescript-export";',
+  'import { spyOnOperationCalls } from "./spyOnOperations";',
   'import type { SpaceTradersOptions } from "./types";',
   '',
   'export class SpaceTradersSdk {',
@@ -54,7 +58,12 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
 
     const pathParameters = (parameterDefinition || [])
       .filter(parameter => parameter.in === 'path');
-    
+
+    const systemAndWaypointSymbolOperation = pathParameters[0]?.name === 'systemSymbol' && pathParameters[1]?.name === 'waypointSymbol';
+    if (systemAndWaypointSymbolOperation) {
+      pathParameters.shift(); // Remove the systemSymbol from the list, will be calculated and added later on
+    }
+
     parameters.push(
       ...pathParameters.map(
         parameter => `${parameter.name}: operations['${operationId}']['parameters']['path']['${parameter.name}']`
@@ -114,13 +123,18 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
     }
 
     if (parameters.length === 0) {
-      output.push(`  async ${operationName}(): Promise<${responseType}> {`)
+      output.push(`  async ${operationName}(): Promise<${responseType}> {`);
     } else {
       output.push(
         `  async ${operationName}(`,
         `    ${parameters.join(',\n    ')}`,
         `  ): Promise<${responseType}> {`,
       );
+    }
+
+    if (systemAndWaypointSymbolOperation) {
+      // Before we've removed the systemSymbol from the parameter list, here we add a function call to determine it based on the waypointSymbol 
+      output.push(`    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);`);
     }
 
     output.push(

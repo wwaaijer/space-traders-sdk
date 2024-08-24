@@ -503,7 +503,7 @@ export class SpaceTradersSdk {
    */
   async extractResources(
     shipSymbol: operations['extract-resources']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['extract-resources']>['requestBody']['content']['application/json']
+    requestBody?: Required<operations['extract-resources']>['requestBody']['content']['application/json']
   ): Promise<operations['extract-resources']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -603,7 +603,7 @@ export class SpaceTradersSdk {
    */
   async patchShipNav(
     shipSymbol: operations['patch-ship-nav']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['patch-ship-nav']>['requestBody']['content']['application/json']
+    requestBody?: Required<operations['patch-ship-nav']>['requestBody']['content']['application/json']
   ): Promise<operations['patch-ship-nav']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'PATCH',
@@ -718,7 +718,7 @@ export class SpaceTradersSdk {
    */
   async refuelShip(
     shipSymbol: operations['refuel-ship']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
+    requestBody?: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['refuel-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',

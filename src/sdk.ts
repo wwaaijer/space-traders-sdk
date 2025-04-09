@@ -37,13 +37,13 @@ export class SpaceTradersSdk {
    * @description Creates a new agent and ties it to an account. 
    *     The agent symbol must consist of a 3-14 character string, and will be used to represent your agent. This symbol will prefix the symbol of every ship you own. Agent symbols will be cast to all uppercase characters.
    *     
-   *     This new agent will be tied to a starting faction of your choice, which determines your starting location, and will be granted an authorization token, a contract with their starting faction, a command ship that can fly across space with advanced capabilities, a small probe ship that can be used for reconnaissance, and 150,000 credits.
+   *     This new agent will be tied to a starting faction of your choice, which determines your starting location, and will be granted an authorization token, a contract with their starting faction, a command ship that can fly across space with advanced capabilities, a small probe ship that can be used for reconnaissance, and 175,000 credits.
    *     
    *     > #### Keep your token safe and secure
    *     >
-   *     > Save your token during the alpha phase. There is no way to regenerate this token without starting a new agent. In the future you will be able to generate and manage your tokens from the SpaceTraders website.
+   *     > Keep careful track of where you store your token. You can generate a new token from our account dashboard, but if someone else gains access to your token they will be able to use it to make API requests on your behalf until the end of the reset.
    *     
-   *     If you are new to SpaceTraders, It is recommended to register with the COSMIC faction, a faction that is well connected to the rest of the universe. After registering, you should try our interactive [quickstart guide](https://docs.spacetraders.io/quickstart/new-game) which will walk you through basic API requests in just a few minutes.
+   *     If you are new to SpaceTraders, It is recommended to register with the COSMIC faction, a faction that is well connected to the rest of the universe. After registering, you should try our interactive [quickstart guide](https://docs.spacetraders.io/quickstart/new-game) which will walk you through a few basic API requests in just a few minutes.
    */
   async register(
     requestBody: Required<operations['register']>['requestBody']['content']['application/json']
@@ -409,7 +409,7 @@ export class SpaceTradersSdk {
    * Ship Refine
    * @description Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request. In order to be able to refine, a ship must have goods that can be refined and have installed a `Refinery` module that can refine it.
    *     
-   *     When refining, 30 basic goods will be converted into 10 processed goods.
+   *     When refining, 100 basic goods will be converted into 10 processed goods.
    */
   async shipRefine(
     shipSymbol: operations['ship-refine']['parameters']['path']['shipSymbol'],
@@ -515,7 +515,7 @@ export class SpaceTradersSdk {
 
   /**
    * Siphon Resources
-   * @description Siphon gases, such as hydrocarbon, from gas giants.
+   * @description Siphon gases or other resources from gas giants.
    *     
    *     The ship must be in orbit to be able to siphon and must have siphon mounts and a gas processor installed.
    */
@@ -887,6 +887,60 @@ export class SpaceTradersSdk {
     return this.client.request({
       method: 'POST',
       path: `/my/ships/${shipSymbol}/repair`,
+    });
+  }
+
+  /**
+   * Get Supply Chain
+   * @description Describes which import and exports map to each other.
+   */
+  async getSupplyChain(): Promise<operations['get-supply-chain']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/market/supply-chain`,
+    });
+  }
+
+  /**
+   * Get Ship Modules
+   * @description Get the modules installed on a ship.
+   */
+  async getShipModules(
+    shipSymbol: operations['get-ship-modules']['parameters']['path']['shipSymbol']
+  ): Promise<operations['get-ship-modules']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/ships/${shipSymbol}/modules`,
+    });
+  }
+
+  /**
+   * Install Ship Module
+   * @description Install a module on a ship. The module must be in your cargo.
+   */
+  async installShipModule(
+    shipSymbol: operations['install-ship-module']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['install-ship-module']>['requestBody']['content']['application/json']
+  ): Promise<operations['install-ship-module']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/modules/install`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Remove Ship Module
+   * @description Remove a module from a ship. The module will be placed in cargo.
+   */
+  async removeShipModule(
+    shipSymbol: operations['remove-ship-module']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['remove-ship-module']>['requestBody']['content']['application/json']
+  ): Promise<operations['remove-ship-module']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/modules/remove`,
+      requestBody,
     });
   }
 }

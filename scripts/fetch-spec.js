@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 
 // URL taken from the SpaceTraders API documentation
-const openApiDocUrl = 'https://stoplight.io/api/v1/projects/spacetraders/spacetraders/nodes/reference/SpaceTraders.json?fromExportButton=true&snapshotType=http_service&deref=optimizedBundle';
+const openApiDocUrl = 'https://spacetraders.io/SpaceTraders.json';
 const openApiDocPath = './tmp/openapi-spec.json';
 
 (async () => {

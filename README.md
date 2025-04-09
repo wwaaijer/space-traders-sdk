@@ -184,6 +184,8 @@ Names are based one the operation ID in the OpenAPI spec.
 Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
 If an endpoint only responds with a data object, the method will return that object.
 
+Last updated for SpaceTraders v2.3.0, changes of 2025-03-23.
+
 ```javascript
 getStatus();
 register(requestBody)
@@ -240,6 +242,10 @@ getScrapShip(shipSymbol)
 scrapShip(shipSymbol)
 getRepairShip(shipSymbol)
 repairShip(shipSymbol)
+getSupplyChain()
+getShipModules(shipSymbol)
+installShipModule(shipSymbol, requestBody)
+removeShipModule(shipSymbol, requestBody)
 ```
 
 ## Regenerating the SDK source code

@@ -1,6 +1,6 @@
-# Space Traders SDK
+# SpaceTraders SDK
 
-A JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/), a game build for (aspiring) software developers.
+An SDK for the [SpaceTraders API](https://spacetraders.io/), a game for (aspiring) software developers.
 
 **Features**
 
@@ -9,11 +9,11 @@ A JavaScript/TypeScript SDK for the [Space Traders API](https://spacetraders.io/
 
 **But there are already a bunch of SDKs out there, why another one?**
 
-This package focuses on improving the developer experience compared to existing SDKs.
+This package is trying to strike a balance between keeping up with changes and the developer experience.
 Most other packages are generated automatically using the OpenAPI Generator CLI, which can lead to less user-friendly interfaces.
 While this SDK also uses the OpenAPI spec, it only relies on [openapi-typescript](https://github.com/openapi-ts/openapi-typescript) to generate types.
 A custom script generates the SDK code itself.
-This approach results in a simpler, more lightweight SDK that’s still easy to maintain and keep aligned with future changes to the Space Traders API.
+This approach results in a simpler, more lightweight SDK, still easy to maintain and keeping aligned with future changes to the SpaceTraders API.
 
 ## Installation
 
@@ -22,27 +22,25 @@ npm install @wwaaijer/space-traders-sdk
 ```
 ## Usage
 
-Agent registration:
+First, register an account at the [SpaceTraders Dashboard](https://my.spacetraders.io/) and generate an agent token.
+
+Then, for example, list the credits of your agent:
 
 ```typescript
 import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
 
-const api = new SpaceTradersSdk();
-const registerResponse = await api.register({
-  symbol: 'BADGER',
-  faction: 'COSMIC',
-});
+const api = new SpaceTradersSdk({ token: '<your agent token here>' });
 
-const token = registerResponse.token;
-console.log(token);
+const agent = await api.getMyAgent();
+console.log(`Logged in as ${agent.symbol}, with ${agent.headquarters} credits`);
 ```
 
-Usage after registration (simulating one of the tutorial steps, finding and purchasing a mining drone):
+Or completing one of the tutorial steps, finding and purchasing a mining drone:
   
 ```typescript
 import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
 
-const api = new SpaceTradersSdk({ token: '<your token here>' });
+const api = new SpaceTradersSdk({ token: '<your agent token here>' });
 
 const agent = await api.getMyAgent();
 console.log(`Logged in as ${agent.symbol}, headquartered at ${agent.headquarters}`);
@@ -179,12 +177,12 @@ await api.getStatus();
 
 ## Method overview
 
-All methods map 1:1 to the Space Traders API endpoints.
+All methods map 1:1 to the SpaceTraders API endpoints.
 Names are based one the operation ID in the OpenAPI spec.
 Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
 If an endpoint only responds with a data object, the method will return that object.
 
-Last updated for SpaceTraders v2.3.0, changes of 2025-03-23.
+Last updated for SpaceTraders v2.3.0 API changes of 2025-03-23.
 
 ```javascript
 getStatus();

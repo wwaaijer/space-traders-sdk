@@ -4,19 +4,31 @@
  */
 
 export interface paths {
-    "/": {
+    "/health": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get the status of the game server.
-         * @description Return the status of the game server.
-         *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
-         */
-        get: operations["get-status"];
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -25,38 +37,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/agents": {
+    "/metrics": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * List all public agent details.
-         * @description List all public agent details.
-         */
-        get: operations["get-agents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/agents/{agentSymbol}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
         };
-        /**
-         * Get public details for a specific agent.
-         * @description Get public details for a specific agent.
-         */
-        get: operations["get-agent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -105,31 +110,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/health": {
+    "/agents": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
+        /**
+         * List all public agent details.
+         * @description List all public agent details.
+         */
+        get: operations["get-agents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/agents/{agentSymbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
+        /**
+         * Get public details for a specific agent.
+         * @description Get public details for a specific agent.
+         */
+        get: operations["get-agent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -158,31 +170,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/metrics": {
+    "/": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        /**
+         * Get the status of the game server.
+         * @description Return the status of the game server.
+         *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
+         */
+        get: operations["get-status"];
         put?: never;
         post?: never;
         delete?: never;
@@ -191,7 +191,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/my/agent": {
+    "/systems": {
         parameters: {
             query?: never;
             header?: never;
@@ -199,10 +199,224 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Agent
-         * @description Fetch your agent's details.
+         * List Systems
+         * @description Return a paginated list of all systems.
          */
-        get: operations["get-my-agent"];
+        get: operations["get-systems"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get System
+         * @description Get the details of a system. Requires the system to have been visited or charted.
+         */
+        get: operations["get-system"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Waypoints in System
+         * @description Return a paginated list of all of the waypoints for a given system.
+         *
+         *     If a waypoint is uncharted, it will return the `Uncharted` trait instead of its actual traits.
+         */
+        get: operations["get-system-waypoints"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Waypoint
+         * @description View the details of a waypoint.
+         *
+         *     If the waypoint is uncharted, it will return the 'Uncharted' trait instead of its actual traits.
+         */
+        get: operations["get-waypoint"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/construction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Construction Site
+         * @description Get construction details for a waypoint. Requires a waypoint with a property of `isUnderConstruction` to be true.
+         */
+        get: operations["get-construction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/construction/supply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Supply Construction Site
+         * @description Supply a construction site with the specified good. Requires a waypoint with a property of `isUnderConstruction` to be true.
+         *
+         *     The good must be in your ship's cargo. The good will be removed from your ship's cargo and added to the construction site's materials.
+         */
+        post: operations["supply-construction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/market": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Market
+         * @description Retrieve imports, exports and exchange data from a marketplace. Requires a waypoint that has the `Marketplace` trait to use.
+         *
+         *     Send a ship to the waypoint to access trade good prices and recent transactions. Refer to the [Market Overview page](https://docs.spacetraders.io/game-concepts/markets) to gain better a understanding of the market in the game.
+         */
+        get: operations["get-market"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/jump-gate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Jump Gate
+         * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
+         *
+         *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
+         */
+        get: operations["get-jump-gate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/shipyard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Shipyard
+         * @description Get the shipyard for a waypoint. Requires a waypoint that has the `Shipyard` trait to use. Send a ship to the waypoint to access data on ships that are currently available for purchase and recent transactions.
+         */
+        get: operations["get-shipyard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/socket.io": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Subscribe to events
+         * @description Subscribe to departure events for a system.
+         *
+         *               ## WebSocket Events
+         *
+         *               The following events are available:
+         *
+         *               - `systems.{systemSymbol}.departure`: A ship has departed from the system.
+         *
+         *               ## Subscribe using a message with the following format:
+         *
+         *               ```json
+         *               {
+         *                 "action": "subscribe",
+         *                 "systemSymbol": "{systemSymbol}"
+         *               }
+         *               ```
+         *
+         *               ## Unsubscribe using a message with the following format:
+         *
+         *               ```json
+         *               {
+         *                 "action": "unsubscribe",
+         *                 "systemSymbol": "{systemSymbol}"
+         *               }
+         *               ```
+         */
+        get: operations["websocket-departure-events"];
         put?: never;
         post?: never;
         delete?: never;
@@ -273,6 +487,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/my/contracts/{contractId}/fulfill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Fulfill Contract
+         * @description Fulfill a contract. Can only be used on contracts that have all of their delivery terms fulfilled.
+         */
+        post: operations["fulfill-contract"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/my/contracts/{contractId}/deliver": {
         parameters: {
             query?: never;
@@ -297,26 +531,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/my/contracts/{contractId}/fulfill": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Fulfill Contract
-         * @description Fulfill a contract. Can only be used on contracts that have all of their delivery terms fulfilled.
-         */
-        post: operations["fulfill-contract"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/my/factions": {
         parameters: {
             query?: never;
@@ -329,6 +543,26 @@ export interface paths {
          * @description Retrieve factions with which the agent has reputation.
          */
         get: operations["get-my-factions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/agent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Agent
+         * @description Fetch your agent's details.
+         */
+        get: operations["get-my-agent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -383,26 +617,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/my/ships/{shipSymbol}/cargo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Ship Cargo
-         * @description Retrieve the cargo of a ship under your agent's ownership.
-         */
-        get: operations["get-my-ship-cargo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/my/ships/{shipSymbol}/chart": {
         parameters: {
             query?: never;
@@ -421,6 +635,32 @@ export interface paths {
          *     Charting a waypoint will record your agent as the one who created the chart, and all other agents would also be able to see the waypoint's traits. Charting a waypoint gives you a one time reward of credits based on the rarity of the waypoint's traits.
          */
         post: operations["create-chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/negotiate/contract": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Negotiate Contract
+         * @description Negotiate a new contract with the HQ.
+         *
+         *     In order to negotiate a new contract, an agent must not have ongoing or offered contracts over the allowed maximum amount. Currently the maximum contracts an agent can have at a time is 1.
+         *
+         *     Once a contract is negotiated, it is added to the list of contracts offered to the agent, which the agent can then accept.
+         *
+         *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
+         */
+        post: operations["negotiate-contract"];
         delete?: never;
         options?: never;
         head?: never;
@@ -557,6 +797,382 @@ export interface paths {
          *     A unit of antimatter is purchased and consumed from the market when jumping. The price of antimatter is determined by the market and is subject to change. A ship can only jump to connected waypoints
          */
         post: operations["jump-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/scan/systems": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Scan Systems
+         * @description Scan for nearby systems, retrieving information on the systems' distance from the ship and their waypoints. Requires a ship to have the `Sensor Array` mount installed to use.
+         *
+         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+         */
+        post: operations["create-ship-system-scan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/scan/waypoints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Scan Waypoints
+         * @description Scan for nearby waypoints, retrieving detailed information on each waypoint in range. Scanning uncharted waypoints will allow you to ignore their uncharted state and will list the waypoints' traits.
+         *
+         *     Requires a ship to have the `Sensor Array` mount installed to use.
+         *
+         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+         */
+        post: operations["create-ship-waypoint-scan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/scan/ships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Scan Ships
+         * @description Scan for nearby ships, retrieving information for all ships in range.
+         *
+         *     Requires a ship to have the `Sensor Array` mount installed to use.
+         *
+         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+         */
+        post: operations["create-ship-ship-scan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/scrap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Scrap Ship
+         * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
+         */
+        get: operations["get-scrap-ship"];
+        put?: never;
+        /**
+         * Scrap Ship
+         * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
+         */
+        post: operations["scrap-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/navigate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Navigate Ship
+         * @description Navigate to a target destination. The ship must be in orbit to use this function. The destination waypoint must be within the same system as the ship's current location. Navigating will consume the necessary fuel from the ship's manifest based on the distance to the target waypoint.
+         *
+         *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at it's destination.
+         *
+         *     To travel between systems, see the ship's Warp or Jump actions.
+         */
+        post: operations["navigate-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/warp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Warp Ship
+         * @description Warp your ship to a target destination in another system. The ship must be in orbit to use this function and must have the `Warp Drive` module installed. Warping will consume the necessary fuel from the ship's manifest.
+         *
+         *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at its destination.
+         */
+        post: operations["warp-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/orbit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Orbit Ship
+         * @description Attempt to move your ship into orbit at its current location. The request will only succeed if your ship is capable of moving into orbit at the time of the request.
+         *
+         *     Orbiting ships are able to do actions that require the ship to be above surface such as navigating or extracting, but cannot access elements in their current waypoint, such as the market or a shipyard.
+         *
+         *     The endpoint is idempotent - successive calls will succeed even if the ship is already in orbit.
+         */
+        post: operations["orbit-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/purchase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Purchase Cargo
+         * @description Purchase cargo from a market.
+         *
+         *     The ship must be docked in a waypoint that has `Marketplace` trait, and the market must be selling a good to be able to purchase it.
+         *
+         *     The maximum amount of units of a good that can be purchased in each transaction are denoted by the `tradeVolume` value of the good, which can be viewed by using the Get Market action.
+         *
+         *     Purchased goods are added to the ship's cargo hold.
+         */
+        post: operations["purchase-cargo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/refine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ship Refine
+         * @description Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request. In order to be able to refine, a ship must have goods that can be refined and have installed a `Refinery` module that can refine it.
+         *
+         *     When refining, 100 basic goods will be converted into 10 processed goods.
+         */
+        post: operations["ship-refine"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/refuel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refuel Ship
+         * @description Refuel your ship by buying fuel from the local market.
+         *
+         *     Requires the ship to be docked in a waypoint that has the `Marketplace` trait, and the market must be selling fuel in order to refuel.
+         *
+         *     Each fuel bought from the market replenishes 100 units in your ship's fuel.
+         *
+         *     Ships will always be refuel to their frame's maximum fuel capacity when using this action.
+         */
+        post: operations["refuel-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/repair": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Repair Ship
+         * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
+         */
+        get: operations["get-repair-ship"];
+        put?: never;
+        /**
+         * Repair Ship
+         * @description Repair a ship, restoring the ship to maximum condition. The ship must be docked at a waypoint that has the `Shipyard` trait in order to use this function. To preview the cost of repairing the ship, use the Get action.
+         */
+        post: operations["repair-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/sell": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sell Cargo
+         * @description Sell cargo in your ship to a market that trades this cargo. The ship must be docked in a waypoint that has the `Marketplace` trait in order to use this function.
+         */
+        post: operations["sell-cargo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/siphon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Siphon Resources
+         * @description Siphon gases or other resources from gas giants.
+         *
+         *     The ship must be in orbit to be able to siphon and must have siphon mounts and a gas processor installed.
+         */
+        post: operations["siphon-resources"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/survey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Survey
+         * @description Create surveys on a waypoint that can be extracted such as asteroid fields. A survey focuses on specific types of deposits from the extracted location. When ships extract using this survey, they are guaranteed to procure a high amount of one of the goods in the survey.
+         *
+         *     In order to use a survey, send the entire survey details in the body of the extract request.
+         *
+         *     Each survey may have multiple deposits, and if a symbol shows up more than once, that indicates a higher chance of extracting that resource.
+         *
+         *     Your ship will enter a cooldown after surveying in which it is unable to perform certain actions. Surveys will eventually expire after a period of time or will be exhausted after being extracted several times based on the survey's size. Multiple ships can use the same survey for extraction.
+         *
+         *     A ship must have the `Surveyor` mount installed in order to use this function.
+         */
+        post: operations["create-survey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Transfer Cargo
+         * @description Transfer cargo between ships.
+         *
+         *     The receiving ship must be in the same waypoint as the transferring ship, and it must able to hold the additional cargo after the transfer is complete. Both ships also must be in the same state, either both are docked or both are orbiting.
+         *
+         *     The response body's cargo shows the cargo of the transferring ship after the transfer is complete.
+         */
+        post: operations["transfer-cargo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/ships/{shipSymbol}/cargo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Ship Cargo
+         * @description Retrieve the cargo of a ship under your agent's ownership.
+         */
+        get: operations["get-my-ship-cargo"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -717,432 +1333,6 @@ export interface paths {
         patch: operations["patch-ship-nav"];
         trace?: never;
     };
-    "/my/ships/{shipSymbol}/navigate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Navigate Ship
-         * @description Navigate to a target destination. The ship must be in orbit to use this function. The destination waypoint must be within the same system as the ship's current location. Navigating will consume the necessary fuel from the ship's manifest based on the distance to the target waypoint.
-         *
-         *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at it's destination.
-         *
-         *     To travel between systems, see the ship's Warp or Jump actions.
-         */
-        post: operations["navigate-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/negotiate/contract": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Negotiate Contract
-         * @description Negotiate a new contract with the HQ.
-         *
-         *     In order to negotiate a new contract, an agent must not have ongoing or offered contracts over the allowed maximum amount. Currently the maximum contracts an agent can have at a time is 1.
-         *
-         *     Once a contract is negotiated, it is added to the list of contracts offered to the agent, which the agent can then accept.
-         *
-         *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
-         */
-        post: operations["negotiate-contract"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/orbit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Orbit Ship
-         * @description Attempt to move your ship into orbit at its current location. The request will only succeed if your ship is capable of moving into orbit at the time of the request.
-         *
-         *     Orbiting ships are able to do actions that require the ship to be above surface such as navigating or extracting, but cannot access elements in their current waypoint, such as the market or a shipyard.
-         *
-         *     The endpoint is idempotent - successive calls will succeed even if the ship is already in orbit.
-         */
-        post: operations["orbit-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/purchase": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Purchase Cargo
-         * @description Purchase cargo from a market.
-         *
-         *     The ship must be docked in a waypoint that has `Marketplace` trait, and the market must be selling a good to be able to purchase it.
-         *
-         *     The maximum amount of units of a good that can be purchased in each transaction are denoted by the `tradeVolume` value of the good, which can be viewed by using the Get Market action.
-         *
-         *     Purchased goods are added to the ship's cargo hold.
-         */
-        post: operations["purchase-cargo"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/refine": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Ship Refine
-         * @description Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request. In order to be able to refine, a ship must have goods that can be refined and have installed a `Refinery` module that can refine it.
-         *
-         *     When refining, 100 basic goods will be converted into 10 processed goods.
-         */
-        post: operations["ship-refine"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/refuel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Refuel Ship
-         * @description Refuel your ship by buying fuel from the local market.
-         *
-         *     Requires the ship to be docked in a waypoint that has the `Marketplace` trait, and the market must be selling fuel in order to refuel.
-         *
-         *     Each fuel bought from the market replenishes 100 units in your ship's fuel.
-         *
-         *     Ships will always be refuel to their frame's maximum fuel capacity when using this action.
-         */
-        post: operations["refuel-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/repair": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Repair Ship
-         * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
-         */
-        get: operations["get-repair-ship"];
-        put?: never;
-        /**
-         * Repair Ship
-         * @description Repair a ship, restoring the ship to maximum condition. The ship must be docked at a waypoint that has the `Shipyard` trait in order to use this function. To preview the cost of repairing the ship, use the Get action.
-         */
-        post: operations["repair-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/scan/ships": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Scan Ships
-         * @description Scan for nearby ships, retrieving information for all ships in range.
-         *
-         *     Requires a ship to have the `Sensor Array` mount installed to use.
-         *
-         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-         */
-        post: operations["create-ship-ship-scan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/scan/systems": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Scan Systems
-         * @description Scan for nearby systems, retrieving information on the systems' distance from the ship and their waypoints. Requires a ship to have the `Sensor Array` mount installed to use.
-         *
-         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-         */
-        post: operations["create-ship-system-scan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/scan/waypoints": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Scan Waypoints
-         * @description Scan for nearby waypoints, retrieving detailed information on each waypoint in range. Scanning uncharted waypoints will allow you to ignore their uncharted state and will list the waypoints' traits.
-         *
-         *     Requires a ship to have the `Sensor Array` mount installed to use.
-         *
-         *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-         */
-        post: operations["create-ship-waypoint-scan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/scrap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Scrap Ship
-         * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
-         */
-        get: operations["get-scrap-ship"];
-        put?: never;
-        /**
-         * Scrap Ship
-         * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
-         */
-        post: operations["scrap-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/sell": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Sell Cargo
-         * @description Sell cargo in your ship to a market that trades this cargo. The ship must be docked in a waypoint that has the `Marketplace` trait in order to use this function.
-         */
-        post: operations["sell-cargo"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/siphon": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Siphon Resources
-         * @description Siphon gases or other resources from gas giants.
-         *
-         *     The ship must be in orbit to be able to siphon and must have siphon mounts and a gas processor installed.
-         */
-        post: operations["siphon-resources"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/survey": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create Survey
-         * @description Create surveys on a waypoint that can be extracted such as asteroid fields. A survey focuses on specific types of deposits from the extracted location. When ships extract using this survey, they are guaranteed to procure a high amount of one of the goods in the survey.
-         *
-         *     In order to use a survey, send the entire survey details in the body of the extract request.
-         *
-         *     Each survey may have multiple deposits, and if a symbol shows up more than once, that indicates a higher chance of extracting that resource.
-         *
-         *     Your ship will enter a cooldown after surveying in which it is unable to perform certain actions. Surveys will eventually expire after a period of time or will be exhausted after being extracted several times based on the survey's size. Multiple ships can use the same survey for extraction.
-         *
-         *     A ship must have the `Surveyor` mount installed in order to use this function.
-         */
-        post: operations["create-survey"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/transfer": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Transfer Cargo
-         * @description Transfer cargo between ships.
-         *
-         *     The receiving ship must be in the same waypoint as the transferring ship, and it must able to hold the additional cargo after the transfer is complete. Both ships also must be in the same state, either both are docked or both are orbiting.
-         *
-         *     The response body's cargo shows the cargo of the transferring ship after the transfer is complete.
-         */
-        post: operations["transfer-cargo"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/ships/{shipSymbol}/warp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Warp Ship
-         * @description Warp your ship to a target destination in another system. The ship must be in orbit to use this function and must have the `Warp Drive` module installed. Warping will consume the necessary fuel from the ship's manifest.
-         *
-         *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at its destination.
-         */
-        post: operations["warp-ship"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/my/socket.io": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Subscribe to events
-         * @description Subscribe to departure events for a system.
-         *
-         *               ## WebSocket Events
-         *
-         *               The following events are available:
-         *
-         *               - `systems.{systemSymbol}.departure`: A ship has departed from the system.
-         *
-         *               ## Subscribe using a message with the following format:
-         *
-         *               ```json
-         *               {
-         *                 "action": "subscribe",
-         *                 "systemSymbol": "{systemSymbol}"
-         *               }
-         *               ```
-         *
-         *               ## Unsubscribe using a message with the following format:
-         *
-         *               ```json
-         *               {
-         *                 "action": "unsubscribe",
-         *                 "systemSymbol": "{systemSymbol}"
-         *               }
-         *               ```
-         */
-        get: operations["websocket-departure-events"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/register": {
         parameters: {
             query?: never;
@@ -1172,353 +1362,10 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/systems": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Systems
-         * @description Return a paginated list of all systems.
-         */
-        get: operations["get-systems"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get System
-         * @description Get the details of a system. Requires the system to have been visited or charted.
-         */
-        get: operations["get-system"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List Waypoints in System
-         * @description Return a paginated list of all of the waypoints for a given system.
-         *
-         *     If a waypoint is uncharted, it will return the `Uncharted` trait instead of its actual traits.
-         */
-        get: operations["get-system-waypoints"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Waypoint
-         * @description View the details of a waypoint.
-         *
-         *     If the waypoint is uncharted, it will return the 'Uncharted' trait instead of its actual traits.
-         */
-        get: operations["get-waypoint"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/construction": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Construction Site
-         * @description Get construction details for a waypoint. Requires a waypoint with a property of `isUnderConstruction` to be true.
-         */
-        get: operations["get-construction"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/construction/supply": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Supply Construction Site
-         * @description Supply a construction site with the specified good. Requires a waypoint with a property of `isUnderConstruction` to be true.
-         *
-         *     The good must be in your ship's cargo. The good will be removed from your ship's cargo and added to the construction site's materials.
-         */
-        post: operations["supply-construction"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/jump-gate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Jump Gate
-         * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
-         *
-         *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
-         */
-        get: operations["get-jump-gate"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/market": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Market
-         * @description Retrieve imports, exports and exchange data from a marketplace. Requires a waypoint that has the `Marketplace` trait to use.
-         *
-         *     Send a ship to the waypoint to access trade good prices and recent transactions. Refer to the [Market Overview page](https://docs.spacetraders.io/game-concepts/markets) to gain better a understanding of the market in the game.
-         */
-        get: operations["get-market"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/systems/{systemSymbol}/waypoints/{waypointSymbol}/shipyard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Shipyard
-         * @description Get the shipyard for a waypoint. Requires a waypoint that has the `Shipyard` trait to use. Send a ship to the waypoint to access data on ships that are currently available for purchase and recent transactions.
-         */
-        get: operations["get-shipyard"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * @description The activity level of a trade good. If the good is an import, this represents how strong consumption is. If the good is an export, this represents how strong the production is for the good. When activity is strong, consumption or production is near maximum capacity. When activity is weak, consumption or production is near minimum capacity.
-         * @enum {string}
-         */
-        ActivityLevel: "WEAK" | "GROWING" | "STRONG" | "RESTRICTED";
-        /** @description Agent details. */
-        Agent: {
-            /** @description Account ID that is tied to this agent. Only included on your own agent. */
-            accountId: string;
-            /** @description Symbol of the agent. */
-            symbol: string;
-            /** @description The headquarters of the agent. */
-            headquarters: string;
-            /**
-             * Format: int64
-             * @description The number of credits the agent has available. Credits can be negative if funds have been overdrawn.
-             */
-            credits: number;
-            /** @description The faction the agent started with. */
-            startingFaction: string;
-            /** @description How many ships are owned by the agent. */
-            shipCount: number;
-        };
-        /** @description The chart of a system or waypoint, which makes the location visible to other agents. */
-        Chart: {
-            waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /** @description The agent that submitted the chart for this waypoint. */
-            submittedBy: string;
-            /**
-             * Format: date-time
-             * @description The time the chart for this waypoint was submitted.
-             */
-            submittedOn: string;
-        };
-        /** @description Result of a chart transaction. */
-        ChartTransaction: {
-            waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /** @description The symbol of the ship. */
-            shipSymbol: string;
-            /** @description The total price of the transaction. */
-            totalPrice: number;
-            /**
-             * Format: date-time
-             * @description The timestamp of the transaction.
-             */
-            timestamp: string;
-        };
-        /** @description The construction details of a waypoint. */
-        Construction: {
-            /** @description The symbol of the waypoint. */
-            symbol: string;
-            /** @description The materials required to construct the waypoint. */
-            materials: components["schemas"]["ConstructionMaterial"][];
-            /** @description Whether the waypoint has been constructed. */
-            isComplete: boolean;
-        };
-        /** @description The details of the required construction materials for a given waypoint under construction. */
-        ConstructionMaterial: {
-            tradeSymbol: components["schemas"]["TradeSymbol"];
-            /** @description The number of units required. */
-            required: number;
-            /** @description The number of units fulfilled toward the required amount. */
-            fulfilled: number;
-        };
-        /** @description Contract details. */
-        Contract: {
-            /** @description ID of the contract. */
-            id: string;
-            /** @description The symbol of the faction that this contract is for. */
-            factionSymbol: string;
-            /**
-             * @description Type of contract.
-             * @enum {string}
-             */
-            type: "PROCUREMENT" | "TRANSPORT" | "SHUTTLE";
-            terms: components["schemas"]["ContractTerms"];
-            /**
-             * @description Whether the contract has been accepted by the agent
-             * @default false
-             */
-            accepted: boolean;
-            /**
-             * @description Whether the contract has been fulfilled
-             * @default false
-             */
-            fulfilled: boolean;
-            /**
-             * Format: date-time
-             * @deprecated
-             * @description Deprecated in favor of deadlineToAccept
-             */
-            expiration: string;
-            /**
-             * Format: date-time
-             * @description The time at which the contract is no longer available to be accepted
-             */
-            deadlineToAccept?: string;
-        };
-        /** @description The details of a delivery contract. Includes the type of good, units needed, and the destination. */
-        ContractDeliverGood: {
-            /** @description The symbol of the trade good to deliver. */
-            tradeSymbol: string;
-            /** @description The destination where goods need to be delivered. */
-            destinationSymbol: string;
-            /** @description The number of units that need to be delivered on this contract. */
-            unitsRequired: number;
-            /** @description The number of units fulfilled on this contract. */
-            unitsFulfilled: number;
-        };
-        /** @description Payments for the contract. */
-        ContractPayment: {
-            /** @description The amount of credits received up front for accepting the contract. */
-            onAccepted: number;
-            /** @description The amount of credits received when the contract is fulfilled. */
-            onFulfilled: number;
-        };
-        /** @description The terms to fulfill the contract. */
-        ContractTerms: {
-            /**
-             * Format: date-time
-             * @description The deadline for the contract.
-             */
-            deadline: string;
-            payment: components["schemas"]["ContractPayment"];
-            /** @description The cargo that needs to be delivered to fulfill the contract. */
-            deliver?: components["schemas"]["ContractDeliverGood"][];
-        };
-        /** @description A cooldown is a period of time in which a ship cannot perform certain actions. */
-        Cooldown: {
-            /** @description The symbol of the ship that is on cooldown */
-            shipSymbol: string;
-            /** @description The total duration of the cooldown in seconds */
-            totalSeconds: number;
-            /** @description The remaining duration of the cooldown in seconds */
-            remainingSeconds: number;
-            /**
-             * Format: date-time
-             * @description The date and time when the cooldown expires in ISO 8601 format
-             */
-            expiration?: string;
-        };
-        /** @description Extraction details. */
-        Extraction: {
-            /** @description Symbol of the ship that executed the extraction. */
-            shipSymbol: string;
-            yield: components["schemas"]["ExtractionYield"];
-        };
-        /** @description A yield from the extraction operation. */
-        ExtractionYield: {
-            symbol: components["schemas"]["TradeSymbol"];
-            /** @description The number of units extracted that were placed into the ship's cargo hold. */
-            units: number;
-        };
         /** @description Faction details. */
         Faction: {
             symbol: components["schemas"]["FactionSymbol"];
@@ -1550,67 +1397,6 @@ export interface components {
          * @enum {string}
          */
         FactionTraitSymbol: "BUREAUCRATIC" | "SECRETIVE" | "CAPITALISTIC" | "INDUSTRIOUS" | "PEACEFUL" | "DISTRUSTFUL" | "WELCOMING" | "SMUGGLERS" | "SCAVENGERS" | "REBELLIOUS" | "EXILES" | "PIRATES" | "RAIDERS" | "CLAN" | "GUILD" | "DOMINION" | "FRINGE" | "FORSAKEN" | "ISOLATED" | "LOCALIZED" | "ESTABLISHED" | "NOTABLE" | "DOMINANT" | "INESCAPABLE" | "INNOVATIVE" | "BOLD" | "VISIONARY" | "CURIOUS" | "DARING" | "EXPLORATORY" | "RESOURCEFUL" | "FLEXIBLE" | "COOPERATIVE" | "UNITED" | "STRATEGIC" | "INTELLIGENT" | "RESEARCH_FOCUSED" | "COLLABORATIVE" | "PROGRESSIVE" | "MILITARISTIC" | "TECHNOLOGICALLY_ADVANCED" | "AGGRESSIVE" | "IMPERIALISTIC" | "TREASURE_HUNTERS" | "DEXTEROUS" | "UNPREDICTABLE" | "BRUTAL" | "FLEETING" | "ADAPTABLE" | "SELF_SUFFICIENT" | "DEFENSIVE" | "PROUD" | "DIVERSE" | "INDEPENDENT" | "SELF_INTERESTED" | "FRAGMENTED" | "COMMERCIAL" | "FREE_MARKETS" | "ENTREPRENEURIAL";
-        /** @description Details of a jump gate waypoint. */
-        JumpGate: {
-            symbol: components["schemas"]["WaypointSymbol"];
-            /** @description All the gates that are connected to this waypoint. */
-            connections: string[];
-        };
-        /** @description Market details. */
-        Market: {
-            /** @description The symbol of the market. The symbol is the same as the waypoint where the market is located. */
-            symbol: string;
-            /** @description The list of goods that are exported from this market. */
-            exports: components["schemas"]["TradeGood"][];
-            /** @description The list of goods that are sought as imports in this market. */
-            imports: components["schemas"]["TradeGood"][];
-            /** @description The list of goods that are bought and sold between agents at this market. */
-            exchange: components["schemas"]["TradeGood"][];
-            /** @description The list of recent transactions at this market. Visible only when a ship is present at the market. */
-            transactions?: components["schemas"]["MarketTransaction"][];
-            /** @description The list of goods that are traded at this market. Visible only when a ship is present at the market. */
-            tradeGoods?: components["schemas"]["MarketTradeGood"][];
-        };
-        MarketTradeGood: {
-            symbol: components["schemas"]["TradeSymbol"];
-            /**
-             * @description The type of trade good (export, import, or exchange).
-             * @enum {string}
-             */
-            type: "EXPORT" | "IMPORT" | "EXCHANGE";
-            /** @description This is the maximum number of units that can be purchased or sold at this market in a single trade for this good. Trade volume also gives an indication of price volatility. A market with a low trade volume will have large price swings, while high trade volume will be more resilient to price changes. */
-            tradeVolume: number;
-            supply: components["schemas"]["SupplyLevel"];
-            activity?: components["schemas"]["ActivityLevel"];
-            /** @description The price at which this good can be purchased from the market. */
-            purchasePrice: number;
-            /** @description The price at which this good can be sold to the market. */
-            sellPrice: number;
-        };
-        /** @description Result of a transaction with a market. */
-        MarketTransaction: {
-            waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /** @description The symbol of the ship that made the transaction. */
-            shipSymbol: string;
-            /** @description The symbol of the trade good. */
-            tradeSymbol: string;
-            /**
-             * @description The type of transaction.
-             * @enum {string}
-             */
-            type: "PURCHASE" | "SELL";
-            /** @description The number of units of the transaction. */
-            units: number;
-            /** @description The price per unit of the transaction. */
-            pricePerUnit: number;
-            /** @description The total price of the transaction. */
-            totalPrice: number;
-            /**
-             * Format: date-time
-             * @description The timestamp of the transaction.
-             */
-            timestamp: string;
-        };
         /** @description Meta details for pagination. */
         Meta: {
             /** @description Shows the total amount of items of this kind that exist. */
@@ -1642,107 +1428,145 @@ export interface components {
             /** @description How many ships are owned by the agent. */
             shipCount: number;
         };
-        /** @description Result of a repair transaction. */
-        RepairTransaction: {
-            waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /** @description The symbol of the ship. */
-            shipSymbol: string;
-            /** @description The total price of the transaction. */
-            totalPrice: number;
-            /**
-             * Format: date-time
-             * @description The timestamp of the transaction.
-             */
-            timestamp: string;
-        };
-        /** @description The ship that was scanned. Details include information about the ship that could be detected by the scanner. */
-        ScannedShip: {
-            /** @description The globally unique identifier of the ship. */
+        /** @description System details. */
+        System: {
+            /** @description The constellation that the system is part of. */
+            constellation?: string;
+            /** @description The symbol of the system. */
             symbol: string;
-            registration: components["schemas"]["ShipRegistration"];
-            nav: components["schemas"]["ShipNav"];
-            /** @description The frame of the ship. */
-            frame?: {
-                /** @description The symbol of the frame. */
-                symbol: string;
-            };
-            /** @description The reactor of the ship. */
-            reactor?: {
-                /** @description The symbol of the reactor. */
-                symbol: string;
-            };
-            /** @description The engine of the ship. */
-            engine: {
-                /** @description The symbol of the engine. */
-                symbol: string;
-            };
-            /** @description List of mounts installed in the ship. */
-            mounts?: {
-                /** @description The symbol of the mount. */
-                symbol: string;
-            }[];
-        };
-        /** @description Details of a system was that scanned. */
-        ScannedSystem: {
-            /** @description Symbol of the system. */
-            symbol: string;
-            /** @description Symbol of the system's sector. */
+            /** @description The symbol of the sector. */
             sectorSymbol: string;
             type: components["schemas"]["SystemType"];
-            /** @description Position in the universe in the x axis. */
+            /** @description Relative position of the system in the sector in the x axis. */
             x: number;
-            /** @description Position in the universe in the y axis. */
+            /** @description Relative position of the system in the sector in the y axis. */
             y: number;
-            /** @description The system's distance from the scanning ship. */
-            distance: number;
+            /** @description Waypoints in this system. */
+            waypoints: components["schemas"]["SystemWaypoint"][];
+            /** @description Factions that control this system. */
+            factions: components["schemas"]["SystemFaction"][];
+            /** @description The name of the system. */
+            name?: string;
         };
-        /** @description A waypoint that was scanned by a ship. */
-        ScannedWaypoint: {
+        /**
+         * @description The type of system.
+         * @enum {string}
+         */
+        SystemType: "NEUTRON_STAR" | "RED_STAR" | "ORANGE_STAR" | "BLUE_STAR" | "YOUNG_STAR" | "WHITE_DWARF" | "BLACK_HOLE" | "HYPERGIANT" | "NEBULA" | "UNSTABLE";
+        /** @description Waypoint details. */
+        SystemWaypoint: {
+            symbol: components["schemas"]["WaypointSymbol"];
+            type: components["schemas"]["WaypointType"];
+            /** @description Relative position of the waypoint on the system's x axis. This is not an absolute position in the universe. */
+            x: number;
+            /** @description Relative position of the waypoint on the system's y axis. This is not an absolute position in the universe. */
+            y: number;
+            /** @description Waypoints that orbit this waypoint. */
+            orbitals: components["schemas"]["WaypointOrbital"][];
+            /** @description The symbol of the parent waypoint, if this waypoint is in orbit around another waypoint. Otherwise this value is undefined. */
+            orbits?: string;
+        };
+        /** @description The symbol of the waypoint. */
+        WaypointSymbol: string;
+        /**
+         * @description The type of waypoint.
+         * @enum {string}
+         */
+        WaypointType: "PLANET" | "GAS_GIANT" | "MOON" | "ORBITAL_STATION" | "JUMP_GATE" | "ASTEROID_FIELD" | "ASTEROID" | "ENGINEERED_ASTEROID" | "ASTEROID_BASE" | "NEBULA" | "DEBRIS_FIELD" | "GRAVITY_WELL" | "ARTIFICIAL_GRAVITY_WELL" | "FUEL_STATION";
+        /** @description An orbital is another waypoint that orbits a parent waypoint. */
+        WaypointOrbital: {
+            /** @description The symbol of the orbiting waypoint. */
+            symbol: string;
+        };
+        SystemFaction: {
+            symbol: components["schemas"]["FactionSymbol"];
+        };
+        /** @description A waypoint is a location that ships can travel to such as a Planet, Moon or Space Station. */
+        Waypoint: {
             symbol: components["schemas"]["WaypointSymbol"];
             type: components["schemas"]["WaypointType"];
             systemSymbol: components["schemas"]["SystemSymbol"];
-            /** @description Position in the universe in the x axis. */
+            /** @description Relative position of the waypoint on the system's x axis. This is not an absolute position in the universe. */
             x: number;
-            /** @description Position in the universe in the y axis. */
+            /** @description Relative position of the waypoint on the system's y axis. This is not an absolute position in the universe. */
             y: number;
-            /** @description List of waypoints that orbit this waypoint. */
+            /** @description Waypoints that orbit this waypoint. */
             orbitals: components["schemas"]["WaypointOrbital"][];
+            /** @description The symbol of the parent waypoint, if this waypoint is in orbit around another waypoint. Otherwise this value is undefined. */
+            orbits?: string;
             faction?: components["schemas"]["WaypointFaction"];
             /** @description The traits of the waypoint. */
             traits: components["schemas"]["WaypointTrait"][];
+            /** @description The modifiers of the waypoint. */
+            modifiers?: components["schemas"]["WaypointModifier"][];
             chart?: components["schemas"]["Chart"];
+            /** @description True if the waypoint is under construction. */
+            isUnderConstruction: boolean;
         };
-        /** @description Result of a scrap transaction. */
-        ScrapTransaction: {
+        /** @description The symbol of the system. */
+        SystemSymbol: string;
+        /** @description The faction that controls the waypoint. */
+        WaypointFaction: {
+            symbol: components["schemas"]["FactionSymbol"];
+        };
+        WaypointTrait: {
+            symbol: components["schemas"]["WaypointTraitSymbol"];
+            /** @description The name of the trait. */
+            name: string;
+            /** @description A description of the trait. */
+            description: string;
+        };
+        /**
+         * @description The unique identifier of the trait.
+         * @enum {string}
+         */
+        WaypointTraitSymbol: "UNCHARTED" | "UNDER_CONSTRUCTION" | "MARKETPLACE" | "SHIPYARD" | "OUTPOST" | "SCATTERED_SETTLEMENTS" | "SPRAWLING_CITIES" | "MEGA_STRUCTURES" | "PIRATE_BASE" | "OVERCROWDED" | "HIGH_TECH" | "CORRUPT" | "BUREAUCRATIC" | "TRADING_HUB" | "INDUSTRIAL" | "BLACK_MARKET" | "RESEARCH_FACILITY" | "MILITARY_BASE" | "SURVEILLANCE_OUTPOST" | "EXPLORATION_OUTPOST" | "MINERAL_DEPOSITS" | "COMMON_METAL_DEPOSITS" | "PRECIOUS_METAL_DEPOSITS" | "RARE_METAL_DEPOSITS" | "METHANE_POOLS" | "ICE_CRYSTALS" | "EXPLOSIVE_GASES" | "STRONG_MAGNETOSPHERE" | "VIBRANT_AURORAS" | "SALT_FLATS" | "CANYONS" | "PERPETUAL_DAYLIGHT" | "PERPETUAL_OVERCAST" | "DRY_SEABEDS" | "MAGMA_SEAS" | "SUPERVOLCANOES" | "ASH_CLOUDS" | "VAST_RUINS" | "MUTATED_FLORA" | "TERRAFORMED" | "EXTREME_TEMPERATURES" | "EXTREME_PRESSURE" | "DIVERSE_LIFE" | "SCARCE_LIFE" | "FOSSILS" | "WEAK_GRAVITY" | "STRONG_GRAVITY" | "CRUSHING_GRAVITY" | "TOXIC_ATMOSPHERE" | "CORROSIVE_ATMOSPHERE" | "BREATHABLE_ATMOSPHERE" | "THIN_ATMOSPHERE" | "JOVIAN" | "ROCKY" | "VOLCANIC" | "FROZEN" | "SWAMP" | "BARREN" | "TEMPERATE" | "JUNGLE" | "OCEAN" | "RADIOACTIVE" | "MICRO_GRAVITY_ANOMALIES" | "DEBRIS_CLUSTER" | "DEEP_CRATERS" | "SHALLOW_CRATERS" | "UNSTABLE_COMPOSITION" | "HOLLOWED_INTERIOR" | "STRIPPED";
+        WaypointModifier: {
+            symbol: components["schemas"]["WaypointModifierSymbol"];
+            /** @description The name of the trait. */
+            name: string;
+            /** @description A description of the trait. */
+            description: string;
+        };
+        /**
+         * Waypoint Modifier Symbol
+         * @description The unique identifier of the modifier.
+         * @enum {string}
+         */
+        WaypointModifierSymbol: "STRIPPED" | "UNSTABLE" | "RADIATION_LEAK" | "CRITICAL_LIMIT" | "CIVIL_UNREST";
+        /** @description The chart of a system or waypoint, which makes the location visible to other agents. */
+        Chart: {
             waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /** @description The symbol of the ship. */
-            shipSymbol: string;
-            /** @description The total price of the transaction. */
-            totalPrice: number;
+            /** @description The agent that submitted the chart for this waypoint. */
+            submittedBy: string;
             /**
              * Format: date-time
-             * @description The timestamp of the transaction.
+             * @description The time the chart for this waypoint was submitted.
              */
-            timestamp: string;
+            submittedOn: string;
         };
-        /** @description Ship details. */
-        Ship: {
-            /** @description The globally unique identifier of the ship in the following format: `[AGENT_SYMBOL]-[HEX_ID]` */
+        /** @description The construction details of a waypoint. */
+        Construction: {
+            /** @description The symbol of the waypoint. */
             symbol: string;
-            registration: components["schemas"]["ShipRegistration"];
-            nav: components["schemas"]["ShipNav"];
-            crew: components["schemas"]["ShipCrew"];
-            frame: components["schemas"]["ShipFrame"];
-            reactor: components["schemas"]["ShipReactor"];
-            engine: components["schemas"]["ShipEngine"];
-            /** @description Modules installed in this ship. */
-            modules: components["schemas"]["ShipModule"][];
-            /** @description Mounts installed in this ship. */
-            mounts: components["schemas"]["ShipMount"][];
-            cargo: components["schemas"]["ShipCargo"];
-            fuel: components["schemas"]["ShipFuel"];
-            cooldown: components["schemas"]["Cooldown"];
+            /** @description The materials required to construct the waypoint. */
+            materials: components["schemas"]["ConstructionMaterial"][];
+            /** @description Whether the waypoint has been constructed. */
+            isComplete: boolean;
         };
+        /** @description The details of the required construction materials for a given waypoint under construction. */
+        ConstructionMaterial: {
+            tradeSymbol: components["schemas"]["TradeSymbol"];
+            /** @description The number of units required. */
+            required: number;
+            /** @description The number of units fulfilled toward the required amount. */
+            fulfilled: number;
+        };
+        /**
+         * @description The good's symbol.
+         * @enum {string}
+         */
+        TradeSymbol: "PRECIOUS_STONES" | "QUARTZ_SAND" | "SILICON_CRYSTALS" | "AMMONIA_ICE" | "LIQUID_HYDROGEN" | "LIQUID_NITROGEN" | "ICE_WATER" | "EXOTIC_MATTER" | "ADVANCED_CIRCUITRY" | "GRAVITON_EMITTERS" | "IRON" | "IRON_ORE" | "COPPER" | "COPPER_ORE" | "ALUMINUM" | "ALUMINUM_ORE" | "SILVER" | "SILVER_ORE" | "GOLD" | "GOLD_ORE" | "PLATINUM" | "PLATINUM_ORE" | "DIAMONDS" | "URANITE" | "URANITE_ORE" | "MERITIUM" | "MERITIUM_ORE" | "HYDROCARBON" | "ANTIMATTER" | "FAB_MATS" | "FERTILIZERS" | "FABRICS" | "FOOD" | "JEWELRY" | "MACHINERY" | "FIREARMS" | "ASSAULT_RIFLES" | "MILITARY_EQUIPMENT" | "EXPLOSIVES" | "LAB_INSTRUMENTS" | "AMMUNITION" | "ELECTRONICS" | "SHIP_PLATING" | "SHIP_PARTS" | "EQUIPMENT" | "FUEL" | "MEDICINE" | "DRUGS" | "CLOTHING" | "MICROPROCESSORS" | "PLASTICS" | "POLYNUCLEOTIDES" | "BIOCOMPOSITES" | "QUANTUM_STABILIZERS" | "NANOBOTS" | "AI_MAINFRAMES" | "QUANTUM_DRIVES" | "ROBOTIC_DRONES" | "CYBER_IMPLANTS" | "GENE_THERAPEUTICS" | "NEURAL_CHIPS" | "MOOD_REGULATORS" | "VIRAL_AGENTS" | "MICRO_FUSION_GENERATORS" | "SUPERGRAINS" | "LASER_RIFLES" | "HOLOGRAPHICS" | "SHIP_SALVAGE" | "RELIC_TECH" | "NOVEL_LIFEFORMS" | "BOTANICAL_SPECIMENS" | "CULTURAL_ARTIFACTS" | "FRAME_PROBE" | "FRAME_DRONE" | "FRAME_INTERCEPTOR" | "FRAME_RACER" | "FRAME_FIGHTER" | "FRAME_FRIGATE" | "FRAME_SHUTTLE" | "FRAME_EXPLORER" | "FRAME_MINER" | "FRAME_LIGHT_FREIGHTER" | "FRAME_HEAVY_FREIGHTER" | "FRAME_TRANSPORT" | "FRAME_DESTROYER" | "FRAME_CRUISER" | "FRAME_CARRIER" | "FRAME_BULK_FREIGHTER" | "REACTOR_SOLAR_I" | "REACTOR_FUSION_I" | "REACTOR_FISSION_I" | "REACTOR_CHEMICAL_I" | "REACTOR_ANTIMATTER_I" | "ENGINE_IMPULSE_DRIVE_I" | "ENGINE_ION_DRIVE_I" | "ENGINE_ION_DRIVE_II" | "ENGINE_HYPER_DRIVE_I" | "MODULE_MINERAL_PROCESSOR_I" | "MODULE_GAS_PROCESSOR_I" | "MODULE_CARGO_HOLD_I" | "MODULE_CARGO_HOLD_II" | "MODULE_CARGO_HOLD_III" | "MODULE_CREW_QUARTERS_I" | "MODULE_ENVOY_QUARTERS_I" | "MODULE_PASSENGER_CABIN_I" | "MODULE_MICRO_REFINERY_I" | "MODULE_SCIENCE_LAB_I" | "MODULE_JUMP_DRIVE_I" | "MODULE_JUMP_DRIVE_II" | "MODULE_JUMP_DRIVE_III" | "MODULE_WARP_DRIVE_I" | "MODULE_WARP_DRIVE_II" | "MODULE_WARP_DRIVE_III" | "MODULE_SHIELD_GENERATOR_I" | "MODULE_SHIELD_GENERATOR_II" | "MODULE_ORE_REFINERY_I" | "MODULE_FUEL_REFINERY_I" | "MOUNT_GAS_SIPHON_I" | "MOUNT_GAS_SIPHON_II" | "MOUNT_GAS_SIPHON_III" | "MOUNT_SURVEYOR_I" | "MOUNT_SURVEYOR_II" | "MOUNT_SURVEYOR_III" | "MOUNT_SENSOR_ARRAY_I" | "MOUNT_SENSOR_ARRAY_II" | "MOUNT_SENSOR_ARRAY_III" | "MOUNT_MINING_LASER_I" | "MOUNT_MINING_LASER_II" | "MOUNT_MINING_LASER_III" | "MOUNT_LASER_CANNON_I" | "MOUNT_MISSILE_LAUNCHER_I" | "MOUNT_TURRET_I" | "SHIP_PROBE" | "SHIP_MINING_DRONE" | "SHIP_SIPHON_DRONE" | "SHIP_INTERCEPTOR" | "SHIP_LIGHT_HAULER" | "SHIP_COMMAND_FRIGATE" | "SHIP_EXPLORER" | "SHIP_HEAVY_FREIGHTER" | "SHIP_LIGHT_SHUTTLE" | "SHIP_ORE_HOUND" | "SHIP_REFINING_FREIGHTER" | "SHIP_SURVEYOR" | "SHIP_BULK_FREIGHTER";
         /** @description Ship cargo details. */
         ShipCargo: {
             /** @description The max number of items that can be stored in the cargo hold. */
@@ -1762,71 +1586,149 @@ export interface components {
             /** @description The number of units of the cargo item. */
             units: number;
         };
-        /**
-         * Format: double
-         * @description The repairable condition of a component. A value of 0 indicates the component needs significant repairs, while a value of 1 indicates the component is in near perfect condition. As the condition of a component is repaired, the overall integrity of the component decreases.
-         */
-        ShipComponentCondition: number;
-        /**
-         * Format: double
-         * @description The overall integrity of the component, which determines the performance of the component. A value of 0 indicates that the component is almost completely degraded, while a value of 1 indicates that the component is in near perfect condition. The integrity of the component is non-repairable, and represents permanent wear over time.
-         */
-        ShipComponentIntegrity: number;
-        /**
-         * Format: integer
-         * @description The overall quality of the component, which determines the quality of the component. High quality components return more ships parts and ship plating when a ship is scrapped. But also require more of these parts to repair. This is transparent to the player, as the parts are bought from/sold to the marketplace.
-         */
-        ShipComponentQuality: number;
-        /** @description An event that represents damage or wear to a ship's reactor, frame, or engine, reducing the condition of the ship. */
-        ShipConditionEvent: {
-            /**
-             * @description The symbol of the event that occurred.
-             * @enum {string}
-             */
-            symbol: "REACTOR_OVERLOAD" | "ENERGY_SPIKE_FROM_MINERAL" | "SOLAR_FLARE_INTERFERENCE" | "COOLANT_LEAK" | "POWER_DISTRIBUTION_FLUCTUATION" | "MAGNETIC_FIELD_DISRUPTION" | "HULL_MICROMETEORITE_STRIKES" | "STRUCTURAL_STRESS_FRACTURES" | "CORROSIVE_MINERAL_CONTAMINATION" | "THERMAL_EXPANSION_MISMATCH" | "VIBRATION_DAMAGE_FROM_DRILLING" | "ELECTROMAGNETIC_FIELD_INTERFERENCE" | "IMPACT_WITH_EXTRACTED_DEBRIS" | "FUEL_EFFICIENCY_DEGRADATION" | "COOLANT_SYSTEM_AGEING" | "DUST_MICROABRASIONS" | "THRUSTER_NOZZLE_WEAR" | "EXHAUST_PORT_CLOGGING" | "BEARING_LUBRICATION_FADE" | "SENSOR_CALIBRATION_DRIFT" | "HULL_MICROMETEORITE_DAMAGE" | "SPACE_DEBRIS_COLLISION" | "THERMAL_STRESS" | "VIBRATION_OVERLOAD" | "PRESSURE_DIFFERENTIAL_STRESS" | "ELECTROMAGNETIC_SURGE_EFFECTS" | "ATMOSPHERIC_ENTRY_HEAT";
-            /** @enum {string} */
-            component: "FRAME" | "REACTOR" | "ENGINE";
-            /** @description The name of the event. */
+        /** @description Market details. */
+        Market: {
+            /** @description The symbol of the market. The symbol is the same as the waypoint where the market is located. */
+            symbol: string;
+            /** @description The list of goods that are exported from this market. */
+            exports: components["schemas"]["TradeGood"][];
+            /** @description The list of goods that are sought as imports in this market. */
+            imports: components["schemas"]["TradeGood"][];
+            /** @description The list of goods that are bought and sold between agents at this market. */
+            exchange: components["schemas"]["TradeGood"][];
+            /** @description The list of recent transactions at this market. Visible only when a ship is present at the market. */
+            transactions?: components["schemas"]["MarketTransaction"][];
+            /** @description The list of goods that are traded at this market. Visible only when a ship is present at the market. */
+            tradeGoods?: components["schemas"]["MarketTradeGood"][];
+        };
+        /** @description A good that can be traded for other goods or currency. */
+        TradeGood: {
+            symbol: components["schemas"]["TradeSymbol"];
+            /** @description The name of the good. */
             name: string;
-            /** @description A description of the event. */
+            /** @description The description of the good. */
             description: string;
         };
-        /** @description The ship's crew service and maintain the ship's systems and equipment. */
-        ShipCrew: {
-            /** @description The current number of crew members on the ship. */
-            current: number;
-            /** @description The minimum number of crew members required to maintain the ship. */
-            required: number;
-            /** @description The maximum number of crew members the ship can support. */
-            capacity: number;
+        /** @description Result of a transaction with a market. */
+        MarketTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /** @description The symbol of the ship that made the transaction. */
+            shipSymbol: string;
+            /** @description The symbol of the trade good. */
+            tradeSymbol: string;
             /**
-             * @description The rotation of crew shifts. A stricter shift improves the ship's performance. A more relaxed shift improves the crew's morale.
-             * @default STRICT
+             * @description The type of transaction.
              * @enum {string}
              */
-            rotation: "STRICT" | "RELAXED";
-            /** @description A rough measure of the crew's morale. A higher morale means the crew is happier and more productive. A lower morale means the ship is more prone to accidents. */
-            morale: number;
-            /** @description The amount of credits per crew member paid per hour. Wages are paid when a ship docks at a civilized waypoint. */
-            wages: number;
+            type: "PURCHASE" | "SELL";
+            /** @description The number of units of the transaction. */
+            units: number;
+            /** @description The price per unit of the transaction. */
+            pricePerUnit: number;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
         };
-        /** @description The engine determines how quickly a ship travels between waypoints. */
-        ShipEngine: {
+        MarketTradeGood: {
+            symbol: components["schemas"]["TradeSymbol"];
             /**
-             * @description The symbol of the engine.
+             * @description The type of trade good (export, import, or exchange).
              * @enum {string}
              */
-            symbol: "ENGINE_IMPULSE_DRIVE_I" | "ENGINE_ION_DRIVE_I" | "ENGINE_ION_DRIVE_II" | "ENGINE_HYPER_DRIVE_I";
-            /** @description The name of the engine. */
+            type: "EXPORT" | "IMPORT" | "EXCHANGE";
+            /** @description This is the maximum number of units that can be purchased or sold at this market in a single trade for this good. Trade volume also gives an indication of price volatility. A market with a low trade volume will have large price swings, while high trade volume will be more resilient to price changes. */
+            tradeVolume: number;
+            supply: components["schemas"]["SupplyLevel"];
+            activity?: components["schemas"]["ActivityLevel"];
+            /** @description The price at which this good can be purchased from the market. */
+            purchasePrice: number;
+            /** @description The price at which this good can be sold to the market. */
+            sellPrice: number;
+        };
+        /**
+         * @description The supply level of a trade good.
+         * @enum {string}
+         */
+        SupplyLevel: "SCARCE" | "LIMITED" | "MODERATE" | "HIGH" | "ABUNDANT";
+        /**
+         * @description The activity level of a trade good. If the good is an import, this represents how strong consumption is. If the good is an export, this represents how strong the production is for the good. When activity is strong, consumption or production is near maximum capacity. When activity is weak, consumption or production is near minimum capacity.
+         * @enum {string}
+         */
+        ActivityLevel: "WEAK" | "GROWING" | "STRONG" | "RESTRICTED";
+        /** @description Details of a jump gate waypoint. */
+        JumpGate: {
+            symbol: components["schemas"]["WaypointSymbol"];
+            /** @description All the gates that are connected to this waypoint. */
+            connections: string[];
+        };
+        /** @description Shipyard details. */
+        Shipyard: {
+            /** @description The symbol of the shipyard. The symbol is the same as the waypoint where the shipyard is located. */
+            symbol: string;
+            /** @description The list of ship types available for purchase at this shipyard. */
+            shipTypes: {
+                type: components["schemas"]["ShipType"];
+            }[];
+            /** @description The list of recent transactions at this shipyard. */
+            transactions?: components["schemas"]["ShipyardTransaction"][];
+            /** @description The ships that are currently available for purchase at the shipyard. */
+            ships?: components["schemas"]["ShipyardShip"][];
+            /** @description The fee to modify a ship at this shipyard. This includes installing or removing modules and mounts on a ship. In the case of mounts, the fee is a flat rate per mount. In the case of modules, the fee is per slot the module occupies. */
+            modificationsFee: number;
+        };
+        /**
+         * @description Type of ship
+         * @enum {string}
+         */
+        ShipType: "SHIP_PROBE" | "SHIP_MINING_DRONE" | "SHIP_SIPHON_DRONE" | "SHIP_INTERCEPTOR" | "SHIP_LIGHT_HAULER" | "SHIP_COMMAND_FRIGATE" | "SHIP_EXPLORER" | "SHIP_HEAVY_FREIGHTER" | "SHIP_LIGHT_SHUTTLE" | "SHIP_ORE_HOUND" | "SHIP_REFINING_FREIGHTER" | "SHIP_SURVEYOR" | "SHIP_BULK_FREIGHTER";
+        /** @description Results of a transaction with a shipyard. */
+        ShipyardTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /**
+             * @deprecated
+             * @description The symbol of the ship type (e.g. SHIP_MINING_DRONE) that was the subject of the transaction. Contrary to what the name implies, this is NOT the symbol of the ship that was purchased.
+             */
+            shipSymbol: string;
+            /** @description The symbol of the ship type (e.g. SHIP_MINING_DRONE) that was the subject of the transaction. */
+            shipType: string;
+            /** @description The price of the transaction. */
+            price: number;
+            /** @description The symbol of the agent that made the transaction. */
+            agentSymbol: string;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
+        };
+        /** @description Ship details available at a shipyard. */
+        ShipyardShip: {
+            type: components["schemas"]["ShipType"];
+            /** @description Name of the ship. */
             name: string;
-            condition: components["schemas"]["ShipComponentCondition"];
-            integrity: components["schemas"]["ShipComponentIntegrity"];
-            /** @description The description of the engine. */
+            /** @description Description of the ship. */
             description: string;
-            /** @description The speed stat of this engine. The higher the speed, the faster a ship can travel from one point to another. Reduces the time of arrival when navigating the ship. */
-            speed: number;
-            requirements: components["schemas"]["ShipRequirements"];
-            quality: components["schemas"]["ShipComponentQuality"];
+            activity?: components["schemas"]["ActivityLevel"];
+            supply: components["schemas"]["SupplyLevel"];
+            /** @description The purchase price of the ship. */
+            purchasePrice: number;
+            frame: components["schemas"]["ShipFrame"];
+            reactor: components["schemas"]["ShipReactor"];
+            engine: components["schemas"]["ShipEngine"];
+            /** @description Modules installed in this ship. */
+            modules: components["schemas"]["ShipModule"][];
+            /** @description Mounts installed in this ship. */
+            mounts: components["schemas"]["ShipMount"][];
+            crew: {
+                /** @description The minimum number of crew members required to maintain the ship. */
+                required: number;
+                /** @description The maximum number of crew members the ship can support. */
+                capacity: number;
+            };
         };
         /** @description The frame of the ship. The frame determines the number of modules and mounting points of the ship, as well as base fuel capacity. As the condition of the frame takes more wear, the ship will become more sluggish and less maneuverable. */
         ShipFrame: {
@@ -1850,38 +1752,65 @@ export interface components {
             requirements: components["schemas"]["ShipRequirements"];
             quality: components["schemas"]["ShipComponentQuality"];
         };
-        /** @description Details of the ship's fuel tanks including how much fuel was consumed during the last transit or action. */
-        ShipFuel: {
-            /** @description The current amount of fuel in the ship's tanks. */
-            current: number;
-            /** @description The maximum amount of fuel the ship's tanks can hold. */
-            capacity: number;
-            /** @description An object that only shows up when an action has consumed fuel in the process. Shows the fuel consumption data. */
-            consumed?: {
-                /** @description The amount of fuel consumed by the most recent transit or action. */
-                amount: number;
-                /**
-                 * Format: date-time
-                 * @description The time at which the fuel was consumed.
-                 */
-                timestamp: string;
-            };
+        /**
+         * Format: double
+         * @description The repairable condition of a component. A value of 0 indicates the component needs significant repairs, while a value of 1 indicates the component is in near perfect condition. As the condition of a component is repaired, the overall integrity of the component decreases.
+         */
+        ShipComponentCondition: number;
+        /**
+         * Format: double
+         * @description The overall integrity of the component, which determines the performance of the component. A value of 0 indicates that the component is almost completely degraded, while a value of 1 indicates that the component is in near perfect condition. The integrity of the component is non-repairable, and represents permanent wear over time.
+         */
+        ShipComponentIntegrity: number;
+        /** @description The requirements for installation on a ship */
+        ShipRequirements: {
+            /** @description The amount of power required from the reactor. */
+            power?: number;
+            /** @description The number of crew required for operation. */
+            crew?: number;
+            /** @description The number of module slots required for installation. */
+            slots?: number;
         };
-        /** @description Result of a transaction for a ship modification, such as installing a mount or a module. */
-        ShipModificationTransaction: {
-            /** @description The symbol of the waypoint where the transaction took place. */
-            waypointSymbol: string;
-            /** @description The symbol of the ship that made the transaction. */
-            shipSymbol: string;
-            /** @description The symbol of the trade good. */
-            tradeSymbol: string;
-            /** @description The total price of the transaction. */
-            totalPrice: number;
+        /**
+         * Format: integer
+         * @description The overall quality of the component, which determines the quality of the component. High quality components return more ships parts and ship plating when a ship is scrapped. But also require more of these parts to repair. This is transparent to the player, as the parts are bought from/sold to the marketplace.
+         */
+        ShipComponentQuality: number;
+        /** @description The reactor of the ship. The reactor is responsible for powering the ship's systems and weapons. */
+        ShipReactor: {
             /**
-             * Format: date-time
-             * @description The timestamp of the transaction.
+             * @description Symbol of the reactor.
+             * @enum {string}
              */
-            timestamp: string;
+            symbol: "REACTOR_SOLAR_I" | "REACTOR_FUSION_I" | "REACTOR_FISSION_I" | "REACTOR_CHEMICAL_I" | "REACTOR_ANTIMATTER_I";
+            /** @description Name of the reactor. */
+            name: string;
+            condition: components["schemas"]["ShipComponentCondition"];
+            integrity: components["schemas"]["ShipComponentIntegrity"];
+            /** @description Description of the reactor. */
+            description: string;
+            /** @description The amount of power provided by this reactor. The more power a reactor provides to the ship, the lower the cooldown it gets when using a module or mount that taxes the ship's power. */
+            powerOutput: number;
+            requirements: components["schemas"]["ShipRequirements"];
+            quality: components["schemas"]["ShipComponentQuality"];
+        };
+        /** @description The engine determines how quickly a ship travels between waypoints. */
+        ShipEngine: {
+            /**
+             * @description The symbol of the engine.
+             * @enum {string}
+             */
+            symbol: "ENGINE_IMPULSE_DRIVE_I" | "ENGINE_ION_DRIVE_I" | "ENGINE_ION_DRIVE_II" | "ENGINE_HYPER_DRIVE_I";
+            /** @description The name of the engine. */
+            name: string;
+            condition: components["schemas"]["ShipComponentCondition"];
+            integrity: components["schemas"]["ShipComponentIntegrity"];
+            /** @description The description of the engine. */
+            description: string;
+            /** @description The speed stat of this engine. The higher the speed, the faster a ship can travel from one point to another. Reduces the time of arrival when navigating the ship. */
+            speed: number;
+            requirements: components["schemas"]["ShipRequirements"];
+            quality: components["schemas"]["ShipComponentQuality"];
         };
         /** @description A module can be installed in a ship and provides a set of capabilities such as storage space or quarters for crew. Module installations are permanent. */
         ShipModule: {
@@ -1917,6 +1846,118 @@ export interface components {
             deposits?: ("QUARTZ_SAND" | "SILICON_CRYSTALS" | "PRECIOUS_STONES" | "ICE_WATER" | "AMMONIA_ICE" | "IRON_ORE" | "COPPER_ORE" | "SILVER_ORE" | "ALUMINUM_ORE" | "GOLD_ORE" | "PLATINUM_ORE" | "DIAMONDS" | "URANITE_ORE" | "MERITIUM_ORE")[];
             requirements: components["schemas"]["ShipRequirements"];
         };
+        /** @description Contract details. */
+        Contract: {
+            /** @description ID of the contract. */
+            id: string;
+            /** @description The symbol of the faction that this contract is for. */
+            factionSymbol: string;
+            /**
+             * @description Type of contract.
+             * @enum {string}
+             */
+            type: "PROCUREMENT" | "TRANSPORT" | "SHUTTLE";
+            terms: components["schemas"]["ContractTerms"];
+            /**
+             * @description Whether the contract has been accepted by the agent
+             * @default false
+             */
+            accepted: boolean;
+            /**
+             * @description Whether the contract has been fulfilled
+             * @default false
+             */
+            fulfilled: boolean;
+            /**
+             * Format: date-time
+             * @deprecated
+             * @description Deprecated in favor of deadlineToAccept
+             */
+            expiration: string;
+            /**
+             * Format: date-time
+             * @description The time at which the contract is no longer available to be accepted
+             */
+            deadlineToAccept?: string;
+        };
+        /** @description The terms to fulfill the contract. */
+        ContractTerms: {
+            /**
+             * Format: date-time
+             * @description The deadline for the contract.
+             */
+            deadline: string;
+            payment: components["schemas"]["ContractPayment"];
+            /** @description The cargo that needs to be delivered to fulfill the contract. */
+            deliver?: components["schemas"]["ContractDeliverGood"][];
+        };
+        /** @description Payments for the contract. */
+        ContractPayment: {
+            /** @description The amount of credits received up front for accepting the contract. */
+            onAccepted: number;
+            /** @description The amount of credits received when the contract is fulfilled. */
+            onFulfilled: number;
+        };
+        /** @description The details of a delivery contract. Includes the type of good, units needed, and the destination. */
+        ContractDeliverGood: {
+            /** @description The symbol of the trade good to deliver. */
+            tradeSymbol: string;
+            /** @description The destination where goods need to be delivered. */
+            destinationSymbol: string;
+            /** @description The number of units that need to be delivered on this contract. */
+            unitsRequired: number;
+            /** @description The number of units fulfilled on this contract. */
+            unitsFulfilled: number;
+        };
+        /** @description Agent details. */
+        Agent: {
+            /** @description Account ID that is tied to this agent. Only included on your own agent. */
+            accountId: string;
+            /** @description Symbol of the agent. */
+            symbol: string;
+            /** @description The headquarters of the agent. */
+            headquarters: string;
+            /**
+             * Format: int64
+             * @description The number of credits the agent has available. Credits can be negative if funds have been overdrawn.
+             */
+            credits: number;
+            /** @description The faction the agent started with. */
+            startingFaction: string;
+            /** @description How many ships are owned by the agent. */
+            shipCount: number;
+        };
+        /** @description Ship details. */
+        Ship: {
+            /** @description The globally unique identifier of the ship in the following format: `[AGENT_SYMBOL]-[HEX_ID]` */
+            symbol: string;
+            registration: components["schemas"]["ShipRegistration"];
+            nav: components["schemas"]["ShipNav"];
+            crew: components["schemas"]["ShipCrew"];
+            frame: components["schemas"]["ShipFrame"];
+            reactor: components["schemas"]["ShipReactor"];
+            engine: components["schemas"]["ShipEngine"];
+            /** @description Modules installed in this ship. */
+            modules: components["schemas"]["ShipModule"][];
+            /** @description Mounts installed in this ship. */
+            mounts: components["schemas"]["ShipMount"][];
+            cargo: components["schemas"]["ShipCargo"];
+            fuel: components["schemas"]["ShipFuel"];
+            cooldown: components["schemas"]["Cooldown"];
+        };
+        /** @description The public registration information of the ship */
+        ShipRegistration: {
+            /** @description The agent's registered name of the ship */
+            name: string;
+            /** @description The symbol of the faction the ship is registered with */
+            factionSymbol: string;
+            role: components["schemas"]["ShipRole"];
+        };
+        /**
+         * @description The registered role of the ship
+         * @enum {string}
+         */
+        ShipRole: "FABRICATOR" | "HARVESTER" | "HAULER" | "INTERCEPTOR" | "EXCAVATOR" | "TRANSPORT" | "REPAIR" | "SURVEYOR" | "COMMAND" | "CARRIER" | "PATROL" | "SATELLITE" | "EXPLORER" | "REFINERY";
         /** @description The navigation information of the ship. */
         ShipNav: {
             systemSymbol: components["schemas"]["SystemSymbol"];
@@ -1925,12 +1966,6 @@ export interface components {
             status: components["schemas"]["ShipNavStatus"];
             flightMode: components["schemas"]["ShipNavFlightMode"];
         };
-        /**
-         * @description The ship's set speed when traveling between waypoints or systems.
-         * @default CRUISE
-         * @enum {string}
-         */
-        ShipNavFlightMode: "DRIFT" | "STEALTH" | "CRUISE" | "BURN";
         /** @description The routing information for the ship's most recent transit or current location. */
         ShipNavRoute: {
             destination: components["schemas"]["ShipNavRouteWaypoint"];
@@ -1962,128 +1997,101 @@ export interface components {
          * @enum {string}
          */
         ShipNavStatus: "IN_TRANSIT" | "IN_ORBIT" | "DOCKED";
-        /** @description The reactor of the ship. The reactor is responsible for powering the ship's systems and weapons. */
-        ShipReactor: {
+        /**
+         * @description The ship's set speed when traveling between waypoints or systems.
+         * @default CRUISE
+         * @enum {string}
+         */
+        ShipNavFlightMode: "DRIFT" | "STEALTH" | "CRUISE" | "BURN";
+        /** @description The ship's crew service and maintain the ship's systems and equipment. */
+        ShipCrew: {
+            /** @description The current number of crew members on the ship. */
+            current: number;
+            /** @description The minimum number of crew members required to maintain the ship. */
+            required: number;
+            /** @description The maximum number of crew members the ship can support. */
+            capacity: number;
             /**
-             * @description Symbol of the reactor.
+             * @description The rotation of crew shifts. A stricter shift improves the ship's performance. A more relaxed shift improves the crew's morale.
+             * @default STRICT
              * @enum {string}
              */
-            symbol: "REACTOR_SOLAR_I" | "REACTOR_FUSION_I" | "REACTOR_FISSION_I" | "REACTOR_CHEMICAL_I" | "REACTOR_ANTIMATTER_I";
-            /** @description Name of the reactor. */
-            name: string;
-            condition: components["schemas"]["ShipComponentCondition"];
-            integrity: components["schemas"]["ShipComponentIntegrity"];
-            /** @description Description of the reactor. */
-            description: string;
-            /** @description The amount of power provided by this reactor. The more power a reactor provides to the ship, the lower the cooldown it gets when using a module or mount that taxes the ship's power. */
-            powerOutput: number;
-            requirements: components["schemas"]["ShipRequirements"];
-            quality: components["schemas"]["ShipComponentQuality"];
+            rotation: "STRICT" | "RELAXED";
+            /** @description A rough measure of the crew's morale. A higher morale means the crew is happier and more productive. A lower morale means the ship is more prone to accidents. */
+            morale: number;
+            /** @description The amount of credits per crew member paid per hour. Wages are paid when a ship docks at a civilized waypoint. */
+            wages: number;
         };
-        /** @description The public registration information of the ship */
-        ShipRegistration: {
-            /** @description The agent's registered name of the ship */
-            name: string;
-            /** @description The symbol of the faction the ship is registered with */
-            factionSymbol: string;
-            role: components["schemas"]["ShipRole"];
-        };
-        /** @description The requirements for installation on a ship */
-        ShipRequirements: {
-            /** @description The amount of power required from the reactor. */
-            power?: number;
-            /** @description The number of crew required for operation. */
-            crew?: number;
-            /** @description The number of module slots required for installation. */
-            slots?: number;
-        };
-        /**
-         * @description The registered role of the ship
-         * @enum {string}
-         */
-        ShipRole: "FABRICATOR" | "HARVESTER" | "HAULER" | "INTERCEPTOR" | "EXCAVATOR" | "TRANSPORT" | "REPAIR" | "SURVEYOR" | "COMMAND" | "CARRIER" | "PATROL" | "SATELLITE" | "EXPLORER" | "REFINERY";
-        /**
-         * @description Type of ship
-         * @enum {string}
-         */
-        ShipType: "SHIP_PROBE" | "SHIP_MINING_DRONE" | "SHIP_SIPHON_DRONE" | "SHIP_INTERCEPTOR" | "SHIP_LIGHT_HAULER" | "SHIP_COMMAND_FRIGATE" | "SHIP_EXPLORER" | "SHIP_HEAVY_FREIGHTER" | "SHIP_LIGHT_SHUTTLE" | "SHIP_ORE_HOUND" | "SHIP_REFINING_FREIGHTER" | "SHIP_SURVEYOR" | "SHIP_BULK_FREIGHTER";
-        /** @description Shipyard details. */
-        Shipyard: {
-            /** @description The symbol of the shipyard. The symbol is the same as the waypoint where the shipyard is located. */
-            symbol: string;
-            /** @description The list of ship types available for purchase at this shipyard. */
-            shipTypes: {
-                type: components["schemas"]["ShipType"];
-            }[];
-            /** @description The list of recent transactions at this shipyard. */
-            transactions?: components["schemas"]["ShipyardTransaction"][];
-            /** @description The ships that are currently available for purchase at the shipyard. */
-            ships?: components["schemas"]["ShipyardShip"][];
-            /** @description The fee to modify a ship at this shipyard. This includes installing or removing modules and mounts on a ship. In the case of mounts, the fee is a flat rate per mount. In the case of modules, the fee is per slot the module occupies. */
-            modificationsFee: number;
-        };
-        /** @description Ship details available at a shipyard. */
-        ShipyardShip: {
-            type: components["schemas"]["ShipType"];
-            /** @description Name of the ship. */
-            name: string;
-            /** @description Description of the ship. */
-            description: string;
-            activity?: components["schemas"]["ActivityLevel"];
-            supply: components["schemas"]["SupplyLevel"];
-            /** @description The purchase price of the ship. */
-            purchasePrice: number;
-            frame: components["schemas"]["ShipFrame"];
-            reactor: components["schemas"]["ShipReactor"];
-            engine: components["schemas"]["ShipEngine"];
-            /** @description Modules installed in this ship. */
-            modules: components["schemas"]["ShipModule"][];
-            /** @description Mounts installed in this ship. */
-            mounts: components["schemas"]["ShipMount"][];
-            crew: {
-                /** @description The minimum number of crew members required to maintain the ship. */
-                required: number;
-                /** @description The maximum number of crew members the ship can support. */
-                capacity: number;
+        /** @description Details of the ship's fuel tanks including how much fuel was consumed during the last transit or action. */
+        ShipFuel: {
+            /** @description The current amount of fuel in the ship's tanks. */
+            current: number;
+            /** @description The maximum amount of fuel the ship's tanks can hold. */
+            capacity: number;
+            /** @description An object that only shows up when an action has consumed fuel in the process. Shows the fuel consumption data. */
+            consumed?: {
+                /** @description The amount of fuel consumed by the most recent transit or action. */
+                amount: number;
+                /**
+                 * Format: date-time
+                 * @description The time at which the fuel was consumed.
+                 */
+                timestamp: string;
             };
         };
-        /** @description Results of a transaction with a shipyard. */
-        ShipyardTransaction: {
-            waypointSymbol: components["schemas"]["WaypointSymbol"];
-            /**
-             * @deprecated
-             * @description The symbol of the ship type (e.g. SHIP_MINING_DRONE) that was the subject of the transaction. Contrary to what the name implies, this is NOT the symbol of the ship that was purchased.
-             */
+        /** @description A cooldown is a period of time in which a ship cannot perform certain actions. */
+        Cooldown: {
+            /** @description The symbol of the ship that is on cooldown */
             shipSymbol: string;
-            /** @description The symbol of the ship type (e.g. SHIP_MINING_DRONE) that was the subject of the transaction. */
-            shipType: string;
-            /** @description The price of the transaction. */
-            price: number;
-            /** @description The symbol of the agent that made the transaction. */
-            agentSymbol: string;
+            /** @description The total duration of the cooldown in seconds */
+            totalSeconds: number;
+            /** @description The remaining duration of the cooldown in seconds */
+            remainingSeconds: number;
+            /**
+             * Format: date-time
+             * @description The date and time when the cooldown expires in ISO 8601 format
+             */
+            expiration?: string;
+        };
+        /** @description Result of a chart transaction. */
+        ChartTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /** @description The symbol of the ship. */
+            shipSymbol: string;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
             /**
              * Format: date-time
              * @description The timestamp of the transaction.
              */
             timestamp: string;
         };
-        /** @description Siphon details. */
-        Siphon: {
-            /** @description Symbol of the ship that executed the siphon. */
+        /** @description Extraction details. */
+        Extraction: {
+            /** @description Symbol of the ship that executed the extraction. */
             shipSymbol: string;
-            yield: components["schemas"]["SiphonYield"];
+            yield: components["schemas"]["ExtractionYield"];
         };
-        /** @description A yield from the siphon operation. */
-        SiphonYield: {
+        /** @description A yield from the extraction operation. */
+        ExtractionYield: {
             symbol: components["schemas"]["TradeSymbol"];
-            /** @description The number of units siphoned that were placed into the ship's cargo hold. */
+            /** @description The number of units extracted that were placed into the ship's cargo hold. */
             units: number;
         };
-        /**
-         * @description The supply level of a trade good.
-         * @enum {string}
-         */
-        SupplyLevel: "SCARCE" | "LIMITED" | "MODERATE" | "HIGH" | "ABUNDANT";
+        /** @description An event that represents damage or wear to a ship's reactor, frame, or engine, reducing the condition of the ship. */
+        ShipConditionEvent: {
+            /**
+             * @description The symbol of the event that occurred.
+             * @enum {string}
+             */
+            symbol: "REACTOR_OVERLOAD" | "ENERGY_SPIKE_FROM_MINERAL" | "SOLAR_FLARE_INTERFERENCE" | "COOLANT_LEAK" | "POWER_DISTRIBUTION_FLUCTUATION" | "MAGNETIC_FIELD_DISRUPTION" | "HULL_MICROMETEORITE_STRIKES" | "STRUCTURAL_STRESS_FRACTURES" | "CORROSIVE_MINERAL_CONTAMINATION" | "THERMAL_EXPANSION_MISMATCH" | "VIBRATION_DAMAGE_FROM_DRILLING" | "ELECTROMAGNETIC_FIELD_INTERFERENCE" | "IMPACT_WITH_EXTRACTED_DEBRIS" | "FUEL_EFFICIENCY_DEGRADATION" | "COOLANT_SYSTEM_AGEING" | "DUST_MICROABRASIONS" | "THRUSTER_NOZZLE_WEAR" | "EXHAUST_PORT_CLOGGING" | "BEARING_LUBRICATION_FADE" | "SENSOR_CALIBRATION_DRIFT" | "HULL_MICROMETEORITE_DAMAGE" | "SPACE_DEBRIS_COLLISION" | "THERMAL_STRESS" | "VIBRATION_OVERLOAD" | "PRESSURE_DIFFERENTIAL_STRESS" | "ELECTROMAGNETIC_SURGE_EFFECTS" | "ATMOSPHERIC_ENTRY_HEAT";
+            /** @enum {string} */
+            component: "FRAME" | "REACTOR" | "ENGINE";
+            /** @description The name of the event. */
+            name: string;
+            /** @description A description of the event. */
+            description: string;
+        };
         /** @description A resource survey of a waypoint, detailing a specific extraction location and the types of resources that can be found there. */
         Survey: {
             /** @description A unique signature for the location of this survey. This signature is verified when attempting an extraction using this survey. */
@@ -2109,125 +2117,117 @@ export interface components {
          * @enum {string}
          */
         SurveySize: "SMALL" | "MODERATE" | "LARGE";
-        /** @description System details. */
-        System: {
-            /** @description The constellation that the system is part of. */
-            constellation?: string;
-            /** @description The symbol of the system. */
+        /** @description Details of a system was that scanned. */
+        ScannedSystem: {
+            /** @description Symbol of the system. */
             symbol: string;
-            /** @description The symbol of the sector. */
+            /** @description Symbol of the system's sector. */
             sectorSymbol: string;
             type: components["schemas"]["SystemType"];
-            /** @description Relative position of the system in the sector in the x axis. */
+            /** @description Position in the universe in the x axis. */
             x: number;
-            /** @description Relative position of the system in the sector in the y axis. */
+            /** @description Position in the universe in the y axis. */
             y: number;
-            /** @description Waypoints in this system. */
-            waypoints: components["schemas"]["SystemWaypoint"][];
-            /** @description Factions that control this system. */
-            factions: components["schemas"]["SystemFaction"][];
-            /** @description The name of the system. */
-            name?: string;
+            /** @description The system's distance from the scanning ship. */
+            distance: number;
         };
-        SystemFaction: {
-            symbol: components["schemas"]["FactionSymbol"];
-        };
-        /** @description The symbol of the system. */
-        SystemSymbol: string;
-        /**
-         * @description The type of system.
-         * @enum {string}
-         */
-        SystemType: "NEUTRON_STAR" | "RED_STAR" | "ORANGE_STAR" | "BLUE_STAR" | "YOUNG_STAR" | "WHITE_DWARF" | "BLACK_HOLE" | "HYPERGIANT" | "NEBULA" | "UNSTABLE";
-        /** @description Waypoint details. */
-        SystemWaypoint: {
-            symbol: components["schemas"]["WaypointSymbol"];
-            type: components["schemas"]["WaypointType"];
-            /** @description Relative position of the waypoint on the system's x axis. This is not an absolute position in the universe. */
-            x: number;
-            /** @description Relative position of the waypoint on the system's y axis. This is not an absolute position in the universe. */
-            y: number;
-            /** @description Waypoints that orbit this waypoint. */
-            orbitals: components["schemas"]["WaypointOrbital"][];
-            /** @description The symbol of the parent waypoint, if this waypoint is in orbit around another waypoint. Otherwise this value is undefined. */
-            orbits?: string;
-        };
-        /** @description A good that can be traded for other goods or currency. */
-        TradeGood: {
-            symbol: components["schemas"]["TradeSymbol"];
-            /** @description The name of the good. */
-            name: string;
-            /** @description The description of the good. */
-            description: string;
-        };
-        /**
-         * @description The good's symbol.
-         * @enum {string}
-         */
-        TradeSymbol: "PRECIOUS_STONES" | "QUARTZ_SAND" | "SILICON_CRYSTALS" | "AMMONIA_ICE" | "LIQUID_HYDROGEN" | "LIQUID_NITROGEN" | "ICE_WATER" | "EXOTIC_MATTER" | "ADVANCED_CIRCUITRY" | "GRAVITON_EMITTERS" | "IRON" | "IRON_ORE" | "COPPER" | "COPPER_ORE" | "ALUMINUM" | "ALUMINUM_ORE" | "SILVER" | "SILVER_ORE" | "GOLD" | "GOLD_ORE" | "PLATINUM" | "PLATINUM_ORE" | "DIAMONDS" | "URANITE" | "URANITE_ORE" | "MERITIUM" | "MERITIUM_ORE" | "HYDROCARBON" | "ANTIMATTER" | "FAB_MATS" | "FERTILIZERS" | "FABRICS" | "FOOD" | "JEWELRY" | "MACHINERY" | "FIREARMS" | "ASSAULT_RIFLES" | "MILITARY_EQUIPMENT" | "EXPLOSIVES" | "LAB_INSTRUMENTS" | "AMMUNITION" | "ELECTRONICS" | "SHIP_PLATING" | "SHIP_PARTS" | "EQUIPMENT" | "FUEL" | "MEDICINE" | "DRUGS" | "CLOTHING" | "MICROPROCESSORS" | "PLASTICS" | "POLYNUCLEOTIDES" | "BIOCOMPOSITES" | "QUANTUM_STABILIZERS" | "NANOBOTS" | "AI_MAINFRAMES" | "QUANTUM_DRIVES" | "ROBOTIC_DRONES" | "CYBER_IMPLANTS" | "GENE_THERAPEUTICS" | "NEURAL_CHIPS" | "MOOD_REGULATORS" | "VIRAL_AGENTS" | "MICRO_FUSION_GENERATORS" | "SUPERGRAINS" | "LASER_RIFLES" | "HOLOGRAPHICS" | "SHIP_SALVAGE" | "RELIC_TECH" | "NOVEL_LIFEFORMS" | "BOTANICAL_SPECIMENS" | "CULTURAL_ARTIFACTS" | "FRAME_PROBE" | "FRAME_DRONE" | "FRAME_INTERCEPTOR" | "FRAME_RACER" | "FRAME_FIGHTER" | "FRAME_FRIGATE" | "FRAME_SHUTTLE" | "FRAME_EXPLORER" | "FRAME_MINER" | "FRAME_LIGHT_FREIGHTER" | "FRAME_HEAVY_FREIGHTER" | "FRAME_TRANSPORT" | "FRAME_DESTROYER" | "FRAME_CRUISER" | "FRAME_CARRIER" | "FRAME_BULK_FREIGHTER" | "REACTOR_SOLAR_I" | "REACTOR_FUSION_I" | "REACTOR_FISSION_I" | "REACTOR_CHEMICAL_I" | "REACTOR_ANTIMATTER_I" | "ENGINE_IMPULSE_DRIVE_I" | "ENGINE_ION_DRIVE_I" | "ENGINE_ION_DRIVE_II" | "ENGINE_HYPER_DRIVE_I" | "MODULE_MINERAL_PROCESSOR_I" | "MODULE_GAS_PROCESSOR_I" | "MODULE_CARGO_HOLD_I" | "MODULE_CARGO_HOLD_II" | "MODULE_CARGO_HOLD_III" | "MODULE_CREW_QUARTERS_I" | "MODULE_ENVOY_QUARTERS_I" | "MODULE_PASSENGER_CABIN_I" | "MODULE_MICRO_REFINERY_I" | "MODULE_SCIENCE_LAB_I" | "MODULE_JUMP_DRIVE_I" | "MODULE_JUMP_DRIVE_II" | "MODULE_JUMP_DRIVE_III" | "MODULE_WARP_DRIVE_I" | "MODULE_WARP_DRIVE_II" | "MODULE_WARP_DRIVE_III" | "MODULE_SHIELD_GENERATOR_I" | "MODULE_SHIELD_GENERATOR_II" | "MODULE_ORE_REFINERY_I" | "MODULE_FUEL_REFINERY_I" | "MOUNT_GAS_SIPHON_I" | "MOUNT_GAS_SIPHON_II" | "MOUNT_GAS_SIPHON_III" | "MOUNT_SURVEYOR_I" | "MOUNT_SURVEYOR_II" | "MOUNT_SURVEYOR_III" | "MOUNT_SENSOR_ARRAY_I" | "MOUNT_SENSOR_ARRAY_II" | "MOUNT_SENSOR_ARRAY_III" | "MOUNT_MINING_LASER_I" | "MOUNT_MINING_LASER_II" | "MOUNT_MINING_LASER_III" | "MOUNT_LASER_CANNON_I" | "MOUNT_MISSILE_LAUNCHER_I" | "MOUNT_TURRET_I" | "SHIP_PROBE" | "SHIP_MINING_DRONE" | "SHIP_SIPHON_DRONE" | "SHIP_INTERCEPTOR" | "SHIP_LIGHT_HAULER" | "SHIP_COMMAND_FRIGATE" | "SHIP_EXPLORER" | "SHIP_HEAVY_FREIGHTER" | "SHIP_LIGHT_SHUTTLE" | "SHIP_ORE_HOUND" | "SHIP_REFINING_FREIGHTER" | "SHIP_SURVEYOR" | "SHIP_BULK_FREIGHTER";
-        /** @description A waypoint is a location that ships can travel to such as a Planet, Moon or Space Station. */
-        Waypoint: {
+        /** @description A waypoint that was scanned by a ship. */
+        ScannedWaypoint: {
             symbol: components["schemas"]["WaypointSymbol"];
             type: components["schemas"]["WaypointType"];
             systemSymbol: components["schemas"]["SystemSymbol"];
-            /** @description Relative position of the waypoint on the system's x axis. This is not an absolute position in the universe. */
+            /** @description Position in the universe in the x axis. */
             x: number;
-            /** @description Relative position of the waypoint on the system's y axis. This is not an absolute position in the universe. */
+            /** @description Position in the universe in the y axis. */
             y: number;
-            /** @description Waypoints that orbit this waypoint. */
+            /** @description List of waypoints that orbit this waypoint. */
             orbitals: components["schemas"]["WaypointOrbital"][];
-            /** @description The symbol of the parent waypoint, if this waypoint is in orbit around another waypoint. Otherwise this value is undefined. */
-            orbits?: string;
             faction?: components["schemas"]["WaypointFaction"];
             /** @description The traits of the waypoint. */
             traits: components["schemas"]["WaypointTrait"][];
-            /** @description The modifiers of the waypoint. */
-            modifiers?: components["schemas"]["WaypointModifier"][];
             chart?: components["schemas"]["Chart"];
-            /** @description True if the waypoint is under construction. */
-            isUnderConstruction: boolean;
         };
-        /** @description The faction that controls the waypoint. */
-        WaypointFaction: {
-            symbol: components["schemas"]["FactionSymbol"];
-        };
-        WaypointModifier: {
-            symbol: components["schemas"]["WaypointModifierSymbol"];
-            /** @description The name of the trait. */
-            name: string;
-            /** @description A description of the trait. */
-            description: string;
-        };
-        /**
-         * Waypoint Modifier Symbol
-         * @description The unique identifier of the modifier.
-         * @enum {string}
-         */
-        WaypointModifierSymbol: "STRIPPED" | "UNSTABLE" | "RADIATION_LEAK" | "CRITICAL_LIMIT" | "CIVIL_UNREST";
-        /** @description An orbital is another waypoint that orbits a parent waypoint. */
-        WaypointOrbital: {
-            /** @description The symbol of the orbiting waypoint. */
+        /** @description The ship that was scanned. Details include information about the ship that could be detected by the scanner. */
+        ScannedShip: {
+            /** @description The globally unique identifier of the ship. */
             symbol: string;
+            registration: components["schemas"]["ShipRegistration"];
+            nav: components["schemas"]["ShipNav"];
+            /** @description The frame of the ship. */
+            frame?: {
+                /** @description The symbol of the frame. */
+                symbol: string;
+            };
+            /** @description The reactor of the ship. */
+            reactor?: {
+                /** @description The symbol of the reactor. */
+                symbol: string;
+            };
+            /** @description The engine of the ship. */
+            engine: {
+                /** @description The symbol of the engine. */
+                symbol: string;
+            };
+            /** @description List of mounts installed in the ship. */
+            mounts?: {
+                /** @description The symbol of the mount. */
+                symbol: string;
+            }[];
         };
-        /** @description The symbol of the waypoint. */
-        WaypointSymbol: string;
-        WaypointTrait: {
-            symbol: components["schemas"]["WaypointTraitSymbol"];
-            /** @description The name of the trait. */
-            name: string;
-            /** @description A description of the trait. */
-            description: string;
+        /** @description Result of a scrap transaction. */
+        ScrapTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /** @description The symbol of the ship. */
+            shipSymbol: string;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
         };
-        /**
-         * @description The unique identifier of the trait.
-         * @enum {string}
-         */
-        WaypointTraitSymbol: "UNCHARTED" | "UNDER_CONSTRUCTION" | "MARKETPLACE" | "SHIPYARD" | "OUTPOST" | "SCATTERED_SETTLEMENTS" | "SPRAWLING_CITIES" | "MEGA_STRUCTURES" | "PIRATE_BASE" | "OVERCROWDED" | "HIGH_TECH" | "CORRUPT" | "BUREAUCRATIC" | "TRADING_HUB" | "INDUSTRIAL" | "BLACK_MARKET" | "RESEARCH_FACILITY" | "MILITARY_BASE" | "SURVEILLANCE_OUTPOST" | "EXPLORATION_OUTPOST" | "MINERAL_DEPOSITS" | "COMMON_METAL_DEPOSITS" | "PRECIOUS_METAL_DEPOSITS" | "RARE_METAL_DEPOSITS" | "METHANE_POOLS" | "ICE_CRYSTALS" | "EXPLOSIVE_GASES" | "STRONG_MAGNETOSPHERE" | "VIBRANT_AURORAS" | "SALT_FLATS" | "CANYONS" | "PERPETUAL_DAYLIGHT" | "PERPETUAL_OVERCAST" | "DRY_SEABEDS" | "MAGMA_SEAS" | "SUPERVOLCANOES" | "ASH_CLOUDS" | "VAST_RUINS" | "MUTATED_FLORA" | "TERRAFORMED" | "EXTREME_TEMPERATURES" | "EXTREME_PRESSURE" | "DIVERSE_LIFE" | "SCARCE_LIFE" | "FOSSILS" | "WEAK_GRAVITY" | "STRONG_GRAVITY" | "CRUSHING_GRAVITY" | "TOXIC_ATMOSPHERE" | "CORROSIVE_ATMOSPHERE" | "BREATHABLE_ATMOSPHERE" | "THIN_ATMOSPHERE" | "JOVIAN" | "ROCKY" | "VOLCANIC" | "FROZEN" | "SWAMP" | "BARREN" | "TEMPERATE" | "JUNGLE" | "OCEAN" | "RADIOACTIVE" | "MICRO_GRAVITY_ANOMALIES" | "DEBRIS_CLUSTER" | "DEEP_CRATERS" | "SHALLOW_CRATERS" | "UNSTABLE_COMPOSITION" | "HOLLOWED_INTERIOR" | "STRIPPED";
-        /**
-         * @description The type of waypoint.
-         * @enum {string}
-         */
-        WaypointType: "PLANET" | "GAS_GIANT" | "MOON" | "ORBITAL_STATION" | "JUMP_GATE" | "ASTEROID_FIELD" | "ASTEROID" | "ENGINEERED_ASTEROID" | "ASTEROID_BASE" | "NEBULA" | "DEBRIS_FIELD" | "GRAVITY_WELL" | "ARTIFICIAL_GRAVITY_WELL" | "FUEL_STATION";
+        /** @description Result of a repair transaction. */
+        RepairTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /** @description The symbol of the ship. */
+            shipSymbol: string;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
+        };
+        /** @description Siphon details. */
+        Siphon: {
+            /** @description Symbol of the ship that executed the siphon. */
+            shipSymbol: string;
+            yield: components["schemas"]["SiphonYield"];
+        };
+        /** @description A yield from the siphon operation. */
+        SiphonYield: {
+            symbol: components["schemas"]["TradeSymbol"];
+            /** @description The number of units siphoned that were placed into the ship's cargo hold. */
+            units: number;
+        };
+        /** @description Result of a transaction for a ship modification, such as installing a mount or a module. */
+        ShipModificationTransaction: {
+            /** @description The symbol of the waypoint where the transaction took place. */
+            waypointSymbol: string;
+            /** @description The symbol of the ship that made the transaction. */
+            shipSymbol: string;
+            /** @description The symbol of the trade good. */
+            tradeSymbol: string;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -2237,6 +2237,138 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "get-factions": {
+        parameters: {
+            query?: {
+                /** @description What entry offset to request */
+                page?: number;
+                /** @description How many entries to return per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched factions. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Faction"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    "get-faction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The faction symbol */
+                factionSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Faction"];
+                    };
+                };
+            };
+        };
+    };
+    "get-agents": {
+        parameters: {
+            query?: {
+                /** @description What entry offset to request */
+                page?: number;
+                /** @description How many entries to return per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched agents details. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PublicAgent"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    "get-agent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The agent symbol */
+                agentSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PublicAgent"];
+                    };
+                };
+            };
+        };
+    };
+    "get-supply-chain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved the supply chain information */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            exportToImportMap: {
+                                [key: string]: string[];
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
     "get-status": {
         parameters: {
             query?: never;
@@ -2311,7 +2443,7 @@ export interface operations {
             };
         };
     };
-    "get-agents": {
+    "get-systems": {
         parameters: {
             query?: {
                 /** @description What entry offset to request */
@@ -2325,125 +2457,264 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched agents details. */
+            /** @description Successfully listed systems. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PublicAgent"][];
+                        data: components["schemas"]["System"][];
                         meta: components["schemas"]["Meta"];
                     };
                 };
             };
         };
     };
-    "get-agent": {
+    "get-system": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description The agent symbol */
-                agentSymbol: string;
+                systemSymbol: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Default Response */
+            /** @description Successfully fetched the system. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PublicAgent"];
+                        data: components["schemas"]["System"];
                     };
                 };
             };
         };
     };
-    "get-factions": {
+    "get-system-waypoints": {
         parameters: {
             query?: {
                 /** @description What entry offset to request */
                 page?: number;
                 /** @description How many entries to return per page */
                 limit?: number;
+                /** @description Filter waypoints by type. */
+                type?: components["schemas"]["WaypointType"];
+                /** @description Filter waypoints by one or more traits. */
+                traits?: components["schemas"]["WaypointTraitSymbol"][];
             };
             header?: never;
-            path?: never;
+            path: {
+                systemSymbol: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched factions. */
+            /** @description Successfully listed waypoints. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Faction"][];
+                        data: components["schemas"]["Waypoint"][];
                         meta: components["schemas"]["Meta"];
                     };
                 };
             };
         };
     };
-    "get-faction": {
+    "get-waypoint": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description The faction symbol */
-                factionSymbol: string;
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Default Response */
+            /** @description Successfully fetched waypoint details. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Faction"];
+                        data: components["schemas"]["Waypoint"];
                     };
                 };
             };
         };
     };
-    "get-supply-chain": {
+    "get-construction": {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully retrieved the supply chain information */
+            /** @description Successfully fetched construction site. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Construction"];
+                    };
+                };
+            };
+        };
+    };
+    "supply-construction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description The symbol of the ship supplying construction materials.
+                     * @example DODO-1
+                     */
+                    shipSymbol: string;
+                    /**
+                     * @description The symbol of the good to supply.
+                     * @example IRON_ORE
+                     */
+                    tradeSymbol: components["schemas"]["TradeSymbol"];
+                    /**
+                     * @description Amount of units to supply.
+                     * @example 10
+                     */
+                    units: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Successfully supplied construction site. */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
                         data: {
-                            exportToImportMap: {
-                                [key: string]: string[];
-                            };
+                            construction: components["schemas"]["Construction"];
+                            cargo: components["schemas"]["ShipCargo"];
                         };
                     };
                 };
             };
         };
     };
-    "get-my-agent": {
+    "get-market": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched the market. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Market"];
+                    };
+                };
+            };
+        };
+    };
+    "get-jump-gate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Jump gate details retrieved successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["JumpGate"];
+                    };
+                };
+            };
+        };
+    };
+    "get-shipyard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The system symbol */
+                systemSymbol: string;
+                /** @description The waypoint symbol */
+                waypointSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched the shipyard. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Shipyard"];
+                    };
+                };
+            };
+        };
+    };
+    "websocket-departure-events": {
         parameters: {
             query?: never;
             header?: never;
@@ -2452,16 +2723,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched agent details. */
+            /** @description Default Response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Agent"];
-                    };
-                };
+                content?: never;
             };
         };
     };
@@ -2546,6 +2813,34 @@ export interface operations {
             };
         };
     };
+    "fulfill-contract": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The ID of the contract to fulfill. */
+                contractId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fulfilled a contract. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            contract: components["schemas"]["Contract"];
+                            agent: components["schemas"]["Agent"];
+                        };
+                    };
+                };
+            };
+        };
+    };
     "deliver-contract": {
         parameters: {
             query?: never;
@@ -2591,34 +2886,6 @@ export interface operations {
             };
         };
     };
-    "fulfill-contract": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The ID of the contract to fulfill. */
-                contractId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fulfilled a contract. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            contract: components["schemas"]["Contract"];
-                            agent: components["schemas"]["Agent"];
-                        };
-                    };
-                };
-            };
-        };
-    };
     "get-my-factions": {
         parameters: {
             query?: {
@@ -2645,6 +2912,28 @@ export interface operations {
                             reputation: number;
                         }[];
                         meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    "get-my-agent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched agent details. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Agent"];
                     };
                 };
             };
@@ -2737,31 +3026,6 @@ export interface operations {
             };
         };
     };
-    "get-my-ship-cargo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched ship's cargo. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["ShipCargo"];
-                    };
-                };
-            };
-        };
-    };
     "create-chart": {
         parameters: {
             query?: never;
@@ -2786,6 +3050,33 @@ export interface operations {
                             waypoint: components["schemas"]["Waypoint"];
                             transaction: components["schemas"]["ChartTransaction"];
                             agent: components["schemas"]["Agent"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "negotiate-contract": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully negotiated a new contract. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            contract: components["schemas"]["Contract"];
                         };
                     };
                 };
@@ -2986,6 +3277,599 @@ export interface operations {
                             transaction: components["schemas"]["MarketTransaction"];
                             agent: components["schemas"]["Agent"];
                         };
+                    };
+                };
+            };
+        };
+    };
+    "create-ship-system-scan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully scanned for nearby systems. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cooldown: components["schemas"]["Cooldown"];
+                            /** @description List of scanned systems. */
+                            systems: components["schemas"]["ScannedSystem"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "create-ship-waypoint-scan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully scanned for nearby waypoints. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cooldown: components["schemas"]["Cooldown"];
+                            /** @description List of scanned waypoints. */
+                            waypoints: components["schemas"]["ScannedWaypoint"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "create-ship-ship-scan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully scanned for nearby ships. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cooldown: components["schemas"]["Cooldown"];
+                            /** @description List of scanned ships. */
+                            ships: components["schemas"]["ScannedShip"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "get-scrap-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved the amount of value that will be returned when scrapping a ship. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            transaction: components["schemas"]["ScrapTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "scrap-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ship scrapped successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            agent: components["schemas"]["Agent"];
+                            transaction: components["schemas"]["ScrapTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "navigate-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The symbol of the waypoint to navigate/warp to. */
+                    waypointSymbol: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The successful transit information including the route details and changes to ship fuel. The route includes the expected time of arrival. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            nav: components["schemas"]["ShipNav"];
+                            fuel: components["schemas"]["ShipFuel"];
+                            events: components["schemas"]["ShipConditionEvent"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "warp-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description The symbol of the waypoint to navigate/warp to. */
+                    waypointSymbol: string;
+                };
+            };
+        };
+        responses: {
+            /** @description The successful transit information including the route details and changes to ship fuel. The route includes the expected time of arrival. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            nav: components["schemas"]["ShipNav"];
+                            fuel: components["schemas"]["ShipFuel"];
+                            events: components["schemas"]["ShipConditionEvent"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "orbit-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The ship has successfully moved into orbit at its current location. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            nav: components["schemas"]["ShipNav"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "purchase-cargo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    symbol: components["schemas"]["TradeSymbol"];
+                    /** @description The number of units of the good to purchase. */
+                    units: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Purchased goods successfully. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cargo: components["schemas"]["ShipCargo"];
+                            transaction: components["schemas"]["MarketTransaction"];
+                            agent: components["schemas"]["Agent"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "ship-refine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description The type of good to produce out of the refining process.
+                     * @enum {string}
+                     */
+                    produce: "IRON" | "COPPER" | "SILVER" | "GOLD" | "ALUMINUM" | "PLATINUM" | "URANITE" | "MERITIUM" | "FUEL";
+                };
+            };
+        };
+        responses: {
+            /** @description The ship has successfully refined goods. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cargo: components["schemas"]["ShipCargo"];
+                            cooldown: components["schemas"]["Cooldown"];
+                            /** @description Goods that were produced by this refining process. */
+                            produced: {
+                                /** @description Symbol of the good. */
+                                tradeSymbol: components["schemas"]["TradeSymbol"];
+                                /** @description Amount of units of the good. */
+                                units: number;
+                            }[];
+                            /** @description Goods that were consumed during this refining process. */
+                            consumed: {
+                                /** @description Symbol of the good. */
+                                tradeSymbol: components["schemas"]["TradeSymbol"];
+                                /** @description Amount of units of the good. */
+                                units: number;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "refuel-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description The amount of fuel to fill in the ship's tanks. When not specified, the ship will be refueled to its maximum fuel capacity. If the amount specified is greater than the ship's remaining capacity, the ship will only be refueled to its maximum fuel capacity. The amount specified is not in market units but in ship fuel units.
+                     * @example 100
+                     */
+                    units?: number;
+                    /**
+                     * @description Wether to use the FUEL thats in your cargo or not.
+                     * @default false
+                     * @example false
+                     */
+                    fromCargo?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description Refueled successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            agent: components["schemas"]["Agent"];
+                            fuel: components["schemas"]["ShipFuel"];
+                            cargo?: components["schemas"]["ShipCargo"];
+                            transaction: components["schemas"]["MarketTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "get-repair-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully retrieved the cost of repairing a ship. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            transaction: components["schemas"]["RepairTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "repair-ship": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ship repaired successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            agent: components["schemas"]["Agent"];
+                            ship: components["schemas"]["Ship"];
+                            transaction: components["schemas"]["RepairTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "sell-cargo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    symbol: components["schemas"]["TradeSymbol"];
+                    /**
+                     * @description Amounts of units to sell of the selected good.
+                     * @example 100
+                     */
+                    units: number;
+                };
+            };
+        };
+        responses: {
+            /** @description Cargo was successfully sold. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cargo: components["schemas"]["ShipCargo"];
+                            transaction: components["schemas"]["MarketTransaction"];
+                            agent: components["schemas"]["Agent"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "siphon-resources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Siphon successful. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            siphon: components["schemas"]["Siphon"];
+                            cooldown: components["schemas"]["Cooldown"];
+                            cargo: components["schemas"]["ShipCargo"];
+                            events: components["schemas"]["ShipConditionEvent"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "create-survey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Surveys has been created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cooldown: components["schemas"]["Cooldown"];
+                            /** @description Surveys created by this action. */
+                            surveys: components["schemas"]["Survey"][];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "transfer-cargo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    tradeSymbol: components["schemas"]["TradeSymbol"];
+                    /** @description Amount of units to transfer. */
+                    units: number;
+                    /** @description The symbol of the ship to transfer to. */
+                    shipSymbol: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Cargo transferred successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            cargo: components["schemas"]["ShipCargo"];
+                            targetCargo: components["schemas"]["ShipCargo"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "get-my-ship-cargo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The symbol of the ship. */
+                shipSymbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successfully fetched ship's cargo. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ShipCargo"];
                     };
                 };
             };
@@ -3251,619 +4135,6 @@ export interface operations {
             };
         };
     };
-    "navigate-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @description The symbol of the waypoint to navigate/warp to. */
-                    waypointSymbol: string;
-                };
-            };
-        };
-        responses: {
-            /** @description The successful transit information including the route details and changes to ship fuel. The route includes the expected time of arrival. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            nav: components["schemas"]["ShipNav"];
-                            fuel: components["schemas"]["ShipFuel"];
-                            events: components["schemas"]["ShipConditionEvent"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "negotiate-contract": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully negotiated a new contract. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            contract: components["schemas"]["Contract"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "orbit-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The ship has successfully moved into orbit at its current location. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            nav: components["schemas"]["ShipNav"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "purchase-cargo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    symbol: components["schemas"]["TradeSymbol"];
-                    /** @description The number of units of the good to purchase. */
-                    units: number;
-                };
-            };
-        };
-        responses: {
-            /** @description Purchased goods successfully. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cargo: components["schemas"]["ShipCargo"];
-                            transaction: components["schemas"]["MarketTransaction"];
-                            agent: components["schemas"]["Agent"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "ship-refine": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description The type of good to produce out of the refining process.
-                     * @enum {string}
-                     */
-                    produce: "IRON" | "COPPER" | "SILVER" | "GOLD" | "ALUMINUM" | "PLATINUM" | "URANITE" | "MERITIUM" | "FUEL";
-                };
-            };
-        };
-        responses: {
-            /** @description The ship has successfully refined goods. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cargo: components["schemas"]["ShipCargo"];
-                            cooldown: components["schemas"]["Cooldown"];
-                            /** @description Goods that were produced by this refining process. */
-                            produced: {
-                                /** @description Symbol of the good. */
-                                tradeSymbol: components["schemas"]["TradeSymbol"];
-                                /** @description Amount of units of the good. */
-                                units: number;
-                            }[];
-                            /** @description Goods that were consumed during this refining process. */
-                            consumed: {
-                                /** @description Symbol of the good. */
-                                tradeSymbol: components["schemas"]["TradeSymbol"];
-                                /** @description Amount of units of the good. */
-                                units: number;
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "refuel-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description The amount of fuel to fill in the ship's tanks. When not specified, the ship will be refueled to its maximum fuel capacity. If the amount specified is greater than the ship's remaining capacity, the ship will only be refueled to its maximum fuel capacity. The amount specified is not in market units but in ship fuel units.
-                     * @example 100
-                     */
-                    units?: number;
-                    /**
-                     * @description Wether to use the FUEL thats in your cargo or not.
-                     * @default false
-                     * @example false
-                     */
-                    fromCargo?: boolean;
-                };
-            };
-        };
-        responses: {
-            /** @description Refueled successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            agent: components["schemas"]["Agent"];
-                            fuel: components["schemas"]["ShipFuel"];
-                            cargo?: components["schemas"]["ShipCargo"];
-                            transaction: components["schemas"]["MarketTransaction"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "get-repair-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully retrieved the cost of repairing a ship. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            transaction: components["schemas"]["RepairTransaction"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "repair-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Ship repaired successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            agent: components["schemas"]["Agent"];
-                            ship: components["schemas"]["Ship"];
-                            transaction: components["schemas"]["RepairTransaction"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "create-ship-ship-scan": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully scanned for nearby ships. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cooldown: components["schemas"]["Cooldown"];
-                            /** @description List of scanned ships. */
-                            ships: components["schemas"]["ScannedShip"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "create-ship-system-scan": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully scanned for nearby systems. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cooldown: components["schemas"]["Cooldown"];
-                            /** @description List of scanned systems. */
-                            systems: components["schemas"]["ScannedSystem"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "create-ship-waypoint-scan": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully scanned for nearby waypoints. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cooldown: components["schemas"]["Cooldown"];
-                            /** @description List of scanned waypoints. */
-                            waypoints: components["schemas"]["ScannedWaypoint"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "get-scrap-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully retrieved the amount of value that will be returned when scrapping a ship. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            transaction: components["schemas"]["ScrapTransaction"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "scrap-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Ship scrapped successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            agent: components["schemas"]["Agent"];
-                            transaction: components["schemas"]["ScrapTransaction"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "sell-cargo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    symbol: components["schemas"]["TradeSymbol"];
-                    /**
-                     * @description Amounts of units to sell of the selected good.
-                     * @example 100
-                     */
-                    units: number;
-                };
-            };
-        };
-        responses: {
-            /** @description Cargo was successfully sold. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cargo: components["schemas"]["ShipCargo"];
-                            transaction: components["schemas"]["MarketTransaction"];
-                            agent: components["schemas"]["Agent"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "siphon-resources": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Siphon successful. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            siphon: components["schemas"]["Siphon"];
-                            cooldown: components["schemas"]["Cooldown"];
-                            cargo: components["schemas"]["ShipCargo"];
-                            events: components["schemas"]["ShipConditionEvent"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "create-survey": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Surveys has been created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cooldown: components["schemas"]["Cooldown"];
-                            /** @description Surveys created by this action. */
-                            surveys: components["schemas"]["Survey"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "transfer-cargo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    tradeSymbol: components["schemas"]["TradeSymbol"];
-                    /** @description Amount of units to transfer. */
-                    units: number;
-                    /** @description The symbol of the ship to transfer to. */
-                    shipSymbol: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Cargo transferred successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            cargo: components["schemas"]["ShipCargo"];
-                            targetCargo: components["schemas"]["ShipCargo"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "warp-ship": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The symbol of the ship. */
-                shipSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @description The symbol of the waypoint to navigate/warp to. */
-                    waypointSymbol: string;
-                };
-            };
-        };
-        responses: {
-            /** @description The successful transit information including the route details and changes to ship fuel. The route includes the expected time of arrival. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            nav: components["schemas"]["ShipNav"];
-                            fuel: components["schemas"]["ShipFuel"];
-                            events: components["schemas"]["ShipConditionEvent"][];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "websocket-departure-events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Default Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     register: {
         parameters: {
             query?: never;
@@ -3904,277 +4175,6 @@ export interface operations {
                             contract: components["schemas"]["Contract"];
                             ships: components["schemas"]["Ship"][];
                         };
-                    };
-                };
-            };
-        };
-    };
-    "get-systems": {
-        parameters: {
-            query?: {
-                /** @description What entry offset to request */
-                page?: number;
-                /** @description How many entries to return per page */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully listed systems. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["System"][];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    "get-system": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                systemSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched the system. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["System"];
-                    };
-                };
-            };
-        };
-    };
-    "get-system-waypoints": {
-        parameters: {
-            query?: {
-                /** @description What entry offset to request */
-                page?: number;
-                /** @description How many entries to return per page */
-                limit?: number;
-                /** @description Filter waypoints by type. */
-                type?: components["schemas"]["WaypointType"];
-                /** @description Filter waypoints by one or more traits. */
-                traits?: components["schemas"]["WaypointTraitSymbol"][];
-            };
-            header?: never;
-            path: {
-                systemSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully listed waypoints. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Waypoint"][];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    "get-waypoint": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched waypoint details. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Waypoint"];
-                    };
-                };
-            };
-        };
-    };
-    "get-construction": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched construction site. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Construction"];
-                    };
-                };
-            };
-        };
-    };
-    "supply-construction": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /**
-                     * @description The symbol of the ship supplying construction materials.
-                     * @example DODO-1
-                     */
-                    shipSymbol: string;
-                    /**
-                     * @description The symbol of the good to supply.
-                     * @example IRON_ORE
-                     */
-                    tradeSymbol: components["schemas"]["TradeSymbol"];
-                    /**
-                     * @description Amount of units to supply.
-                     * @example 10
-                     */
-                    units: number;
-                };
-            };
-        };
-        responses: {
-            /** @description Successfully supplied construction site. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            construction: components["schemas"]["Construction"];
-                            cargo: components["schemas"]["ShipCargo"];
-                        };
-                    };
-                };
-            };
-        };
-    };
-    "get-jump-gate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Jump gate details retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["JumpGate"];
-                    };
-                };
-            };
-        };
-    };
-    "get-market": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched the market. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Market"];
-                    };
-                };
-            };
-        };
-    };
-    "get-shipyard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The system symbol */
-                systemSymbol: string;
-                /** @description The waypoint symbol */
-                waypointSymbol: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successfully fetched the shipyard. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Shipyard"];
                     };
                 };
             };

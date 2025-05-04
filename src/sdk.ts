@@ -21,14 +21,29 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get the status of the game server.
-   * @description Return the status of the game server.
-   *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
+   * List factions
+   * @description Return a paginated list of all the factions in the game.
    */
-  async getStatus(): Promise<operations['get-status']['responses']['200']['content']['application/json']> {
+  async getFactions(
+    query?: operations['get-factions']['parameters']['query']
+  ): Promise<operations['get-factions']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
-      path: `/`,
+      path: `/factions`,
+      query,
+    });
+  }
+
+  /**
+   * Faction details
+   * @description View the details of a faction.
+   */
+  async getFaction(
+    factionSymbol: operations['get-faction']['parameters']['path']['factionSymbol']
+  ): Promise<operations['get-faction']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/factions/${factionSymbol}`,
     });
   }
 
@@ -60,33 +75,6 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * List factions
-   * @description Return a paginated list of all the factions in the game.
-   */
-  async getFactions(
-    query?: operations['get-factions']['parameters']['query']
-  ): Promise<operations['get-factions']['responses']['200']['content']['application/json']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/factions`,
-      query,
-    });
-  }
-
-  /**
-   * Faction details
-   * @description View the details of a faction.
-   */
-  async getFaction(
-    factionSymbol: operations['get-faction']['parameters']['path']['factionSymbol']
-  ): Promise<operations['get-faction']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/factions/${factionSymbol}`,
-    });
-  }
-
-  /**
    * Describes trade relationships
    * @description Describes which import and exports map to each other.
    */
@@ -98,13 +86,152 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Agent
-   * @description Fetch your agent's details.
+   * Get the status of the game server.
+   * @description Return the status of the game server.
+   *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
    */
-  async getMyAgent(): Promise<operations['get-my-agent']['responses']['200']['content']['application/json']['data']> {
+  async getStatus(): Promise<operations['get-status']['responses']['200']['content']['application/json']> {
     return this.client.request({
       method: 'GET',
-      path: `/my/agent`,
+      path: `/`,
+    });
+  }
+
+  /**
+   * List Systems
+   * @description Return a paginated list of all systems.
+   */
+  async getSystems(
+    query?: operations['get-systems']['parameters']['query']
+  ): Promise<operations['get-systems']['responses']['200']['content']['application/json']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/systems`,
+      query,
+    });
+  }
+
+  /**
+   * Get System
+   * @description Get the details of a system. Requires the system to have been visited or charted.
+   */
+  async getSystem(
+    systemSymbol: operations['get-system']['parameters']['path']['systemSymbol']
+  ): Promise<operations['get-system']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}`,
+    });
+  }
+
+  /**
+   * List Waypoints in System
+   * @description Return a paginated list of all of the waypoints for a given system.
+   *     
+   *     If a waypoint is uncharted, it will return the `Uncharted` trait instead of its actual traits.
+   */
+  async getSystemWaypoints(
+    systemSymbol: operations['get-system-waypoints']['parameters']['path']['systemSymbol'],
+    query?: operations['get-system-waypoints']['parameters']['query']
+  ): Promise<operations['get-system-waypoints']['responses']['200']['content']['application/json']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints`,
+      query,
+    });
+  }
+
+  /**
+   * Get Waypoint
+   * @description View the details of a waypoint.
+   *     
+   *     If the waypoint is uncharted, it will return the 'Uncharted' trait instead of its actual traits.
+   */
+  async getWaypoint(
+    waypointSymbol: operations['get-waypoint']['parameters']['path']['waypointSymbol']
+  ): Promise<operations['get-waypoint']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}`,
+    });
+  }
+
+  /**
+   * Get Construction Site
+   * @description Get construction details for a waypoint. Requires a waypoint with a property of `isUnderConstruction` to be true.
+   */
+  async getConstruction(
+    waypointSymbol: operations['get-construction']['parameters']['path']['waypointSymbol']
+  ): Promise<operations['get-construction']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction`,
+    });
+  }
+
+  /**
+   * Supply Construction Site
+   * @description Supply a construction site with the specified good. Requires a waypoint with a property of `isUnderConstruction` to be true.
+   *     
+   *     The good must be in your ship's cargo. The good will be removed from your ship's cargo and added to the construction site's materials.
+   */
+  async supplyConstruction(
+    waypointSymbol: operations['supply-construction']['parameters']['path']['waypointSymbol'],
+    requestBody: Required<operations['supply-construction']>['requestBody']['content']['application/json']
+  ): Promise<operations['supply-construction']['responses']['201']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'POST',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction/supply`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Get Market
+   * @description Retrieve imports, exports and exchange data from a marketplace. Requires a waypoint that has the `Marketplace` trait to use.
+   *     
+   *     Send a ship to the waypoint to access trade good prices and recent transactions. Refer to the [Market Overview page](https://docs.spacetraders.io/game-concepts/markets) to gain better a understanding of the market in the game.
+   */
+  async getMarket(
+    waypointSymbol: operations['get-market']['parameters']['path']['waypointSymbol']
+  ): Promise<operations['get-market']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/market`,
+    });
+  }
+
+  /**
+   * Get Jump Gate
+   * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
+   *     
+   *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
+   */
+  async getJumpGate(
+    waypointSymbol: operations['get-jump-gate']['parameters']['path']['waypointSymbol']
+  ): Promise<operations['get-jump-gate']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/jump-gate`,
+    });
+  }
+
+  /**
+   * Get Shipyard
+   * @description Get the shipyard for a waypoint. Requires a waypoint that has the `Shipyard` trait to use. Send a ship to the waypoint to access data on ships that are currently available for purchase and recent transactions.
+   */
+  async getShipyard(
+    waypointSymbol: operations['get-shipyard']['parameters']['path']['waypointSymbol']
+  ): Promise<operations['get-shipyard']['responses']['200']['content']['application/json']['data']> {
+    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
+    return this.client.request({
+      method: 'GET',
+      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/shipyard`,
     });
   }
 
@@ -151,6 +278,19 @@ export class SpaceTradersSdk {
   }
 
   /**
+   * Fulfill Contract
+   * @description Fulfill a contract. Can only be used on contracts that have all of their delivery terms fulfilled.
+   */
+  async fulfillContract(
+    contractId: operations['fulfill-contract']['parameters']['path']['contractId']
+  ): Promise<operations['fulfill-contract']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/contracts/${contractId}/fulfill`,
+    });
+  }
+
+  /**
    * Deliver Cargo to Contract
    * @description Deliver cargo to a contract.
    *     
@@ -170,19 +310,6 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Fulfill Contract
-   * @description Fulfill a contract. Can only be used on contracts that have all of their delivery terms fulfilled.
-   */
-  async fulfillContract(
-    contractId: operations['fulfill-contract']['parameters']['path']['contractId']
-  ): Promise<operations['fulfill-contract']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/contracts/${contractId}/fulfill`,
-    });
-  }
-
-  /**
    * Get My Factions
    * @description Retrieve factions with which the agent has reputation.
    */
@@ -193,6 +320,17 @@ export class SpaceTradersSdk {
       method: 'GET',
       path: `/my/factions`,
       query,
+    });
+  }
+
+  /**
+   * Get Agent
+   * @description Fetch your agent's details.
+   */
+  async getMyAgent(): Promise<operations['get-my-agent']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/agent`,
     });
   }
 
@@ -240,19 +378,6 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Ship Cargo
-   * @description Retrieve the cargo of a ship under your agent's ownership.
-   */
-  async getMyShipCargo(
-    shipSymbol: operations['get-my-ship-cargo']['parameters']['path']['shipSymbol']
-  ): Promise<operations['get-my-ship-cargo']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/my/ships/${shipSymbol}/cargo`,
-    });
-  }
-
-  /**
    * Create Chart
    * @description Command a ship to chart the waypoint at its current location.
    *     
@@ -266,6 +391,25 @@ export class SpaceTradersSdk {
     return this.client.request({
       method: 'POST',
       path: `/my/ships/${shipSymbol}/chart`,
+    });
+  }
+
+  /**
+   * Negotiate Contract
+   * @description Negotiate a new contract with the HQ.
+   *     
+   *     In order to negotiate a new contract, an agent must not have ongoing or offered contracts over the allowed maximum amount. Currently the maximum contracts an agent can have at a time is 1.
+   *     
+   *     Once a contract is negotiated, it is added to the list of contracts offered to the agent, which the agent can then accept. 
+   *     
+   *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
+   */
+  async negotiateContract(
+    shipSymbol: operations['negotiate-contract']['parameters']['path']['shipSymbol']
+  ): Promise<operations['negotiate-contract']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/negotiate/contract`,
     });
   }
 
@@ -366,6 +510,302 @@ export class SpaceTradersSdk {
       method: 'POST',
       path: `/my/ships/${shipSymbol}/jump`,
       requestBody,
+    });
+  }
+
+  /**
+   * Scan Systems
+   * @description Scan for nearby systems, retrieving information on the systems' distance from the ship and their waypoints. Requires a ship to have the `Sensor Array` mount installed to use.
+   *     
+   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+   */
+  async createShipSystemScan(
+    shipSymbol: operations['create-ship-system-scan']['parameters']['path']['shipSymbol']
+  ): Promise<operations['create-ship-system-scan']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/scan/systems`,
+    });
+  }
+
+  /**
+   * Scan Waypoints
+   * @description Scan for nearby waypoints, retrieving detailed information on each waypoint in range. Scanning uncharted waypoints will allow you to ignore their uncharted state and will list the waypoints' traits.
+   *     
+   *     Requires a ship to have the `Sensor Array` mount installed to use.
+   *     
+   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+   */
+  async createShipWaypointScan(
+    shipSymbol: operations['create-ship-waypoint-scan']['parameters']['path']['shipSymbol']
+  ): Promise<operations['create-ship-waypoint-scan']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/scan/waypoints`,
+    });
+  }
+
+  /**
+   * Scan Ships
+   * @description Scan for nearby ships, retrieving information for all ships in range.
+   *     
+   *     Requires a ship to have the `Sensor Array` mount installed to use.
+   *     
+   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
+   */
+  async createShipShipScan(
+    shipSymbol: operations['create-ship-ship-scan']['parameters']['path']['shipSymbol']
+  ): Promise<operations['create-ship-ship-scan']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/scan/ships`,
+    });
+  }
+
+  /**
+   * Scrap Ship
+   * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
+   */
+  async scrapShip(
+    shipSymbol: operations['scrap-ship']['parameters']['path']['shipSymbol']
+  ): Promise<operations['scrap-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/scrap`,
+    });
+  }
+
+  /**
+   * Get Scrap Ship
+   * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
+   */
+  async getScrapShip(
+    shipSymbol: operations['get-scrap-ship']['parameters']['path']['shipSymbol']
+  ): Promise<operations['get-scrap-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/ships/${shipSymbol}/scrap`,
+    });
+  }
+
+  /**
+   * Navigate Ship
+   * @description Navigate to a target destination. The ship must be in orbit to use this function. The destination waypoint must be within the same system as the ship's current location. Navigating will consume the necessary fuel from the ship's manifest based on the distance to the target waypoint.
+   *     
+   *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at it's destination.
+   *     
+   *     To travel between systems, see the ship's Warp or Jump actions.
+   */
+  async navigateShip(
+    shipSymbol: operations['navigate-ship']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['navigate-ship']>['requestBody']['content']['application/json']
+  ): Promise<operations['navigate-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/navigate`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Warp Ship
+   * @description Warp your ship to a target destination in another system. The ship must be in orbit to use this function and must have the `Warp Drive` module installed. Warping will consume the necessary fuel from the ship's manifest.
+   *     
+   *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at its destination.
+   */
+  async warpShip(
+    shipSymbol: operations['warp-ship']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['warp-ship']>['requestBody']['content']['application/json']
+  ): Promise<operations['warp-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/warp`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Orbit Ship
+   * @description Attempt to move your ship into orbit at its current location. The request will only succeed if your ship is capable of moving into orbit at the time of the request.
+   *     
+   *     Orbiting ships are able to do actions that require the ship to be above surface such as navigating or extracting, but cannot access elements in their current waypoint, such as the market or a shipyard.
+   *     
+   *     The endpoint is idempotent - successive calls will succeed even if the ship is already in orbit.
+   */
+  async orbitShip(
+    shipSymbol: operations['orbit-ship']['parameters']['path']['shipSymbol']
+  ): Promise<operations['orbit-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/orbit`,
+    });
+  }
+
+  /**
+   * Purchase Cargo
+   * @description Purchase cargo from a market.
+   *     
+   *     The ship must be docked in a waypoint that has `Marketplace` trait, and the market must be selling a good to be able to purchase it.
+   *     
+   *     The maximum amount of units of a good that can be purchased in each transaction are denoted by the `tradeVolume` value of the good, which can be viewed by using the Get Market action.
+   *     
+   *     Purchased goods are added to the ship's cargo hold.
+   */
+  async purchaseCargo(
+    shipSymbol: operations['purchase-cargo']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['purchase-cargo']>['requestBody']['content']['application/json']
+  ): Promise<operations['purchase-cargo']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/purchase`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Ship Refine
+   * @description Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request. In order to be able to refine, a ship must have goods that can be refined and have installed a `Refinery` module that can refine it.
+   *     
+   *     When refining, 100 basic goods will be converted into 10 processed goods.
+   */
+  async shipRefine(
+    shipSymbol: operations['ship-refine']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['ship-refine']>['requestBody']['content']['application/json']
+  ): Promise<operations['ship-refine']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/refine`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Refuel Ship
+   * @description Refuel your ship by buying fuel from the local market.
+   *     
+   *     Requires the ship to be docked in a waypoint that has the `Marketplace` trait, and the market must be selling fuel in order to refuel.
+   *     
+   *     Each fuel bought from the market replenishes 100 units in your ship's fuel.
+   *     
+   *     Ships will always be refuel to their frame's maximum fuel capacity when using this action.
+   */
+  async refuelShip(
+    shipSymbol: operations['refuel-ship']['parameters']['path']['shipSymbol'],
+    requestBody?: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
+  ): Promise<operations['refuel-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/refuel`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Repair Ship
+   * @description Repair a ship, restoring the ship to maximum condition. The ship must be docked at a waypoint that has the `Shipyard` trait in order to use this function. To preview the cost of repairing the ship, use the Get action.
+   */
+  async repairShip(
+    shipSymbol: operations['repair-ship']['parameters']['path']['shipSymbol']
+  ): Promise<operations['repair-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/repair`,
+    });
+  }
+
+  /**
+   * Get Repair Ship
+   * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
+   */
+  async getRepairShip(
+    shipSymbol: operations['get-repair-ship']['parameters']['path']['shipSymbol']
+  ): Promise<operations['get-repair-ship']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/ships/${shipSymbol}/repair`,
+    });
+  }
+
+  /**
+   * Sell Cargo
+   * @description Sell cargo in your ship to a market that trades this cargo. The ship must be docked in a waypoint that has the `Marketplace` trait in order to use this function.
+   */
+  async sellCargo(
+    shipSymbol: operations['sell-cargo']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['sell-cargo']>['requestBody']['content']['application/json']
+  ): Promise<operations['sell-cargo']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/sell`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Siphon Resources
+   * @description Siphon gases or other resources from gas giants.
+   *     
+   *     The ship must be in orbit to be able to siphon and must have siphon mounts and a gas processor installed.
+   */
+  async siphonResources(
+    shipSymbol: operations['siphon-resources']['parameters']['path']['shipSymbol']
+  ): Promise<operations['siphon-resources']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/siphon`,
+    });
+  }
+
+  /**
+   * Create Survey
+   * @description Create surveys on a waypoint that can be extracted such as asteroid fields. A survey focuses on specific types of deposits from the extracted location. When ships extract using this survey, they are guaranteed to procure a high amount of one of the goods in the survey.
+   *     
+   *     In order to use a survey, send the entire survey details in the body of the extract request.
+   *     
+   *     Each survey may have multiple deposits, and if a symbol shows up more than once, that indicates a higher chance of extracting that resource.
+   *     
+   *     Your ship will enter a cooldown after surveying in which it is unable to perform certain actions. Surveys will eventually expire after a period of time or will be exhausted after being extracted several times based on the survey's size. Multiple ships can use the same survey for extraction.
+   *     
+   *     A ship must have the `Surveyor` mount installed in order to use this function.
+   */
+  async createSurvey(
+    shipSymbol: operations['create-survey']['parameters']['path']['shipSymbol']
+  ): Promise<operations['create-survey']['responses']['201']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/survey`,
+    });
+  }
+
+  /**
+   * Transfer Cargo
+   * @description Transfer cargo between ships.
+   *     
+   *     The receiving ship must be in the same waypoint as the transferring ship, and it must able to hold the additional cargo after the transfer is complete. Both ships also must be in the same state, either both are docked or both are orbiting.
+   *     
+   *     The response body's cargo shows the cargo of the transferring ship after the transfer is complete.
+   */
+  async transferCargo(
+    shipSymbol: operations['transfer-cargo']['parameters']['path']['shipSymbol'],
+    requestBody: Required<operations['transfer-cargo']>['requestBody']['content']['application/json']
+  ): Promise<operations['transfer-cargo']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'POST',
+      path: `/my/ships/${shipSymbol}/transfer`,
+      requestBody,
+    });
+  }
+
+  /**
+   * Get Ship Cargo
+   * @description Retrieve the cargo of a ship under your agent's ownership.
+   */
+  async getMyShipCargo(
+    shipSymbol: operations['get-my-ship-cargo']['parameters']['path']['shipSymbol']
+  ): Promise<operations['get-my-ship-cargo']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/ships/${shipSymbol}/cargo`,
     });
   }
 
@@ -494,308 +934,6 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Navigate Ship
-   * @description Navigate to a target destination. The ship must be in orbit to use this function. The destination waypoint must be within the same system as the ship's current location. Navigating will consume the necessary fuel from the ship's manifest based on the distance to the target waypoint.
-   *     
-   *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at it's destination.
-   *     
-   *     To travel between systems, see the ship's Warp or Jump actions.
-   */
-  async navigateShip(
-    shipSymbol: operations['navigate-ship']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['navigate-ship']>['requestBody']['content']['application/json']
-  ): Promise<operations['navigate-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/navigate`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Negotiate Contract
-   * @description Negotiate a new contract with the HQ.
-   *     
-   *     In order to negotiate a new contract, an agent must not have ongoing or offered contracts over the allowed maximum amount. Currently the maximum contracts an agent can have at a time is 1.
-   *     
-   *     Once a contract is negotiated, it is added to the list of contracts offered to the agent, which the agent can then accept. 
-   *     
-   *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
-   */
-  async negotiateContract(
-    shipSymbol: operations['negotiate-contract']['parameters']['path']['shipSymbol']
-  ): Promise<operations['negotiate-contract']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/negotiate/contract`,
-    });
-  }
-
-  /**
-   * Orbit Ship
-   * @description Attempt to move your ship into orbit at its current location. The request will only succeed if your ship is capable of moving into orbit at the time of the request.
-   *     
-   *     Orbiting ships are able to do actions that require the ship to be above surface such as navigating or extracting, but cannot access elements in their current waypoint, such as the market or a shipyard.
-   *     
-   *     The endpoint is idempotent - successive calls will succeed even if the ship is already in orbit.
-   */
-  async orbitShip(
-    shipSymbol: operations['orbit-ship']['parameters']['path']['shipSymbol']
-  ): Promise<operations['orbit-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/orbit`,
-    });
-  }
-
-  /**
-   * Purchase Cargo
-   * @description Purchase cargo from a market.
-   *     
-   *     The ship must be docked in a waypoint that has `Marketplace` trait, and the market must be selling a good to be able to purchase it.
-   *     
-   *     The maximum amount of units of a good that can be purchased in each transaction are denoted by the `tradeVolume` value of the good, which can be viewed by using the Get Market action.
-   *     
-   *     Purchased goods are added to the ship's cargo hold.
-   */
-  async purchaseCargo(
-    shipSymbol: operations['purchase-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['purchase-cargo']>['requestBody']['content']['application/json']
-  ): Promise<operations['purchase-cargo']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/purchase`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Ship Refine
-   * @description Attempt to refine the raw materials on your ship. The request will only succeed if your ship is capable of refining at the time of the request. In order to be able to refine, a ship must have goods that can be refined and have installed a `Refinery` module that can refine it.
-   *     
-   *     When refining, 100 basic goods will be converted into 10 processed goods.
-   */
-  async shipRefine(
-    shipSymbol: operations['ship-refine']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['ship-refine']>['requestBody']['content']['application/json']
-  ): Promise<operations['ship-refine']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/refine`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Refuel Ship
-   * @description Refuel your ship by buying fuel from the local market.
-   *     
-   *     Requires the ship to be docked in a waypoint that has the `Marketplace` trait, and the market must be selling fuel in order to refuel.
-   *     
-   *     Each fuel bought from the market replenishes 100 units in your ship's fuel.
-   *     
-   *     Ships will always be refuel to their frame's maximum fuel capacity when using this action.
-   */
-  async refuelShip(
-    shipSymbol: operations['refuel-ship']['parameters']['path']['shipSymbol'],
-    requestBody?: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
-  ): Promise<operations['refuel-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/refuel`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Get Repair Ship
-   * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
-   */
-  async getRepairShip(
-    shipSymbol: operations['get-repair-ship']['parameters']['path']['shipSymbol']
-  ): Promise<operations['get-repair-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/my/ships/${shipSymbol}/repair`,
-    });
-  }
-
-  /**
-   * Repair Ship
-   * @description Repair a ship, restoring the ship to maximum condition. The ship must be docked at a waypoint that has the `Shipyard` trait in order to use this function. To preview the cost of repairing the ship, use the Get action.
-   */
-  async repairShip(
-    shipSymbol: operations['repair-ship']['parameters']['path']['shipSymbol']
-  ): Promise<operations['repair-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/repair`,
-    });
-  }
-
-  /**
-   * Scan Ships
-   * @description Scan for nearby ships, retrieving information for all ships in range.
-   *     
-   *     Requires a ship to have the `Sensor Array` mount installed to use.
-   *     
-   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-   */
-  async createShipShipScan(
-    shipSymbol: operations['create-ship-ship-scan']['parameters']['path']['shipSymbol']
-  ): Promise<operations['create-ship-ship-scan']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/scan/ships`,
-    });
-  }
-
-  /**
-   * Scan Systems
-   * @description Scan for nearby systems, retrieving information on the systems' distance from the ship and their waypoints. Requires a ship to have the `Sensor Array` mount installed to use.
-   *     
-   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-   */
-  async createShipSystemScan(
-    shipSymbol: operations['create-ship-system-scan']['parameters']['path']['shipSymbol']
-  ): Promise<operations['create-ship-system-scan']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/scan/systems`,
-    });
-  }
-
-  /**
-   * Scan Waypoints
-   * @description Scan for nearby waypoints, retrieving detailed information on each waypoint in range. Scanning uncharted waypoints will allow you to ignore their uncharted state and will list the waypoints' traits.
-   *     
-   *     Requires a ship to have the `Sensor Array` mount installed to use.
-   *     
-   *     The ship will enter a cooldown after using this function, during which it cannot execute certain actions.
-   */
-  async createShipWaypointScan(
-    shipSymbol: operations['create-ship-waypoint-scan']['parameters']['path']['shipSymbol']
-  ): Promise<operations['create-ship-waypoint-scan']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/scan/waypoints`,
-    });
-  }
-
-  /**
-   * Get Scrap Ship
-   * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
-   */
-  async getScrapShip(
-    shipSymbol: operations['get-scrap-ship']['parameters']['path']['shipSymbol']
-  ): Promise<operations['get-scrap-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/my/ships/${shipSymbol}/scrap`,
-    });
-  }
-
-  /**
-   * Scrap Ship
-   * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
-   */
-  async scrapShip(
-    shipSymbol: operations['scrap-ship']['parameters']['path']['shipSymbol']
-  ): Promise<operations['scrap-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/scrap`,
-    });
-  }
-
-  /**
-   * Sell Cargo
-   * @description Sell cargo in your ship to a market that trades this cargo. The ship must be docked in a waypoint that has the `Marketplace` trait in order to use this function.
-   */
-  async sellCargo(
-    shipSymbol: operations['sell-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['sell-cargo']>['requestBody']['content']['application/json']
-  ): Promise<operations['sell-cargo']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/sell`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Siphon Resources
-   * @description Siphon gases or other resources from gas giants.
-   *     
-   *     The ship must be in orbit to be able to siphon and must have siphon mounts and a gas processor installed.
-   */
-  async siphonResources(
-    shipSymbol: operations['siphon-resources']['parameters']['path']['shipSymbol']
-  ): Promise<operations['siphon-resources']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/siphon`,
-    });
-  }
-
-  /**
-   * Create Survey
-   * @description Create surveys on a waypoint that can be extracted such as asteroid fields. A survey focuses on specific types of deposits from the extracted location. When ships extract using this survey, they are guaranteed to procure a high amount of one of the goods in the survey.
-   *     
-   *     In order to use a survey, send the entire survey details in the body of the extract request.
-   *     
-   *     Each survey may have multiple deposits, and if a symbol shows up more than once, that indicates a higher chance of extracting that resource.
-   *     
-   *     Your ship will enter a cooldown after surveying in which it is unable to perform certain actions. Surveys will eventually expire after a period of time or will be exhausted after being extracted several times based on the survey's size. Multiple ships can use the same survey for extraction.
-   *     
-   *     A ship must have the `Surveyor` mount installed in order to use this function.
-   */
-  async createSurvey(
-    shipSymbol: operations['create-survey']['parameters']['path']['shipSymbol']
-  ): Promise<operations['create-survey']['responses']['201']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/survey`,
-    });
-  }
-
-  /**
-   * Transfer Cargo
-   * @description Transfer cargo between ships.
-   *     
-   *     The receiving ship must be in the same waypoint as the transferring ship, and it must able to hold the additional cargo after the transfer is complete. Both ships also must be in the same state, either both are docked or both are orbiting.
-   *     
-   *     The response body's cargo shows the cargo of the transferring ship after the transfer is complete.
-   */
-  async transferCargo(
-    shipSymbol: operations['transfer-cargo']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['transfer-cargo']>['requestBody']['content']['application/json']
-  ): Promise<operations['transfer-cargo']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/transfer`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Warp Ship
-   * @description Warp your ship to a target destination in another system. The ship must be in orbit to use this function and must have the `Warp Drive` module installed. Warping will consume the necessary fuel from the ship's manifest.
-   *     
-   *     The returned response will detail the route information including the expected time of arrival. Most ship actions are unavailable until the ship has arrived at its destination.
-   */
-  async warpShip(
-    shipSymbol: operations['warp-ship']['parameters']['path']['shipSymbol'],
-    requestBody: Required<operations['warp-ship']>['requestBody']['content']['application/json']
-  ): Promise<operations['warp-ship']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'POST',
-      path: `/my/ships/${shipSymbol}/warp`,
-      requestBody,
-    });
-  }
-
-  /**
    * Register New Agent
    * @description Creates a new agent and ties it to an account. 
    *     The agent symbol must consist of a 3-14 character string, and will be used to represent your agent. This symbol will prefix the symbol of every ship you own. Agent symbols will be cast to all uppercase characters.
@@ -815,144 +953,6 @@ export class SpaceTradersSdk {
       method: 'POST',
       path: `/register`,
       requestBody,
-    });
-  }
-
-  /**
-   * List Systems
-   * @description Return a paginated list of all systems.
-   */
-  async getSystems(
-    query?: operations['get-systems']['parameters']['query']
-  ): Promise<operations['get-systems']['responses']['200']['content']['application/json']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/systems`,
-      query,
-    });
-  }
-
-  /**
-   * Get System
-   * @description Get the details of a system. Requires the system to have been visited or charted.
-   */
-  async getSystem(
-    systemSymbol: operations['get-system']['parameters']['path']['systemSymbol']
-  ): Promise<operations['get-system']['responses']['200']['content']['application/json']['data']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}`,
-    });
-  }
-
-  /**
-   * List Waypoints in System
-   * @description Return a paginated list of all of the waypoints for a given system.
-   *     
-   *     If a waypoint is uncharted, it will return the `Uncharted` trait instead of its actual traits.
-   */
-  async getSystemWaypoints(
-    systemSymbol: operations['get-system-waypoints']['parameters']['path']['systemSymbol'],
-    query?: operations['get-system-waypoints']['parameters']['query']
-  ): Promise<operations['get-system-waypoints']['responses']['200']['content']['application/json']> {
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints`,
-      query,
-    });
-  }
-
-  /**
-   * Get Waypoint
-   * @description View the details of a waypoint.
-   *     
-   *     If the waypoint is uncharted, it will return the 'Uncharted' trait instead of its actual traits.
-   */
-  async getWaypoint(
-    waypointSymbol: operations['get-waypoint']['parameters']['path']['waypointSymbol']
-  ): Promise<operations['get-waypoint']['responses']['200']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}`,
-    });
-  }
-
-  /**
-   * Get Construction Site
-   * @description Get construction details for a waypoint. Requires a waypoint with a property of `isUnderConstruction` to be true.
-   */
-  async getConstruction(
-    waypointSymbol: operations['get-construction']['parameters']['path']['waypointSymbol']
-  ): Promise<operations['get-construction']['responses']['200']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction`,
-    });
-  }
-
-  /**
-   * Supply Construction Site
-   * @description Supply a construction site with the specified good. Requires a waypoint with a property of `isUnderConstruction` to be true.
-   *     
-   *     The good must be in your ship's cargo. The good will be removed from your ship's cargo and added to the construction site's materials.
-   */
-  async supplyConstruction(
-    waypointSymbol: operations['supply-construction']['parameters']['path']['waypointSymbol'],
-    requestBody: Required<operations['supply-construction']>['requestBody']['content']['application/json']
-  ): Promise<operations['supply-construction']['responses']['201']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'POST',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/construction/supply`,
-      requestBody,
-    });
-  }
-
-  /**
-   * Get Jump Gate
-   * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
-   *     
-   *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
-   */
-  async getJumpGate(
-    waypointSymbol: operations['get-jump-gate']['parameters']['path']['waypointSymbol']
-  ): Promise<operations['get-jump-gate']['responses']['200']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/jump-gate`,
-    });
-  }
-
-  /**
-   * Get Market
-   * @description Retrieve imports, exports and exchange data from a marketplace. Requires a waypoint that has the `Marketplace` trait to use.
-   *     
-   *     Send a ship to the waypoint to access trade good prices and recent transactions. Refer to the [Market Overview page](https://docs.spacetraders.io/game-concepts/markets) to gain better a understanding of the market in the game.
-   */
-  async getMarket(
-    waypointSymbol: operations['get-market']['parameters']['path']['waypointSymbol']
-  ): Promise<operations['get-market']['responses']['200']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/market`,
-    });
-  }
-
-  /**
-   * Get Shipyard
-   * @description Get the shipyard for a waypoint. Requires a waypoint that has the `Shipyard` trait to use. Send a ship to the waypoint to access data on ships that are currently available for purchase and recent transactions.
-   */
-  async getShipyard(
-    waypointSymbol: operations['get-shipyard']['parameters']['path']['waypointSymbol']
-  ): Promise<operations['get-shipyard']['responses']['200']['content']['application/json']['data']> {
-    const systemSymbol = systemSymbolFromWaypointSymbol(waypointSymbol);
-    return this.client.request({
-      method: 'GET',
-      path: `/systems/${systemSymbol}/waypoints/${waypointSymbol}/shipyard`,
     });
   }
 }

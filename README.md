@@ -247,10 +247,20 @@ removeShipModule(shipSymbol, requestBody)
 ```
 
 ## Regenerating the SDK source code
+Normal build:
 ```shell
 # Bump version
 npm install
 npm run fetch-spec
 npm run build
 npm publish --access public
+```
+
+Staging build:
+```shell
+# Bump version (including -staging)
+npm install
+npm run fetch-spec staging
+npm run build
+npm publish --access public --tag staging
 ```

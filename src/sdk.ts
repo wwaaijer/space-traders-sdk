@@ -21,7 +21,7 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Status
+   * Get the status of the game server.
    * @description Return the status of the game server.
    *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
    */
@@ -33,8 +33,8 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * List Agents
-   * @description Fetch agents details.
+   * List all public agent details.
+   * @description List all public agent details.
    */
   async getAgents(
     query?: operations['get-agents']['parameters']['query']
@@ -47,8 +47,8 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Public Agent
-   * @description Fetch agent details.
+   * Get public details for a specific agent.
+   * @description Get public details for a specific agent.
    */
   async getAgent(
     agentSymbol: operations['get-agent']['parameters']['path']['agentSymbol']
@@ -60,7 +60,7 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * List Factions
+   * List factions
    * @description Return a paginated list of all the factions in the game.
    */
   async getFactions(
@@ -74,7 +74,7 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Faction
+   * Faction details
    * @description View the details of a faction.
    */
   async getFaction(
@@ -87,7 +87,7 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get Supply Chain
+   * Describes trade relationships
    * @description Describes which import and exports map to each other.
    */
   async getSupplyChain(): Promise<operations['get-supply-chain']['responses']['200']['content']['application/json']['data']> {
@@ -124,7 +124,7 @@ export class SpaceTradersSdk {
 
   /**
    * Get Contract
-   * @description Get the details of a contract by ID.
+   * @description Get the details of a specific contract.
    */
   async getContract(
     contractId: operations['get-contract']['parameters']['path']['contractId']
@@ -179,6 +179,20 @@ export class SpaceTradersSdk {
     return this.client.request({
       method: 'POST',
       path: `/my/contracts/${contractId}/fulfill`,
+    });
+  }
+
+  /**
+   * Get My Factions
+   * @description Retrieve factions with which the agent has reputation.
+   */
+  async getMyFactions(
+    query?: operations['get-my-factions']['parameters']['query']
+  ): Promise<operations['get-my-factions']['responses']['200']['content']['application/json']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/factions`,
+      query,
     });
   }
 
@@ -244,7 +258,7 @@ export class SpaceTradersSdk {
    *     
    *     Most waypoints in the universe are uncharted by default. These waypoints have their traits hidden until they have been charted by a ship.
    *     
-   *     Charting a waypoint will record your agent as the one who created the chart, and all other agents would also be able to see the waypoint's traits.
+   *     Charting a waypoint will record your agent as the one who created the chart, and all other agents would also be able to see the waypoint's traits. Charting a waypoint gives you a one time reward of credits based on the rarity of the waypoint's traits.
    */
   async createChart(
     shipSymbol: operations['create-chart']['parameters']['path']['shipSymbol']
@@ -298,13 +312,11 @@ export class SpaceTradersSdk {
    *     The survey property is now deprecated. See the `extract/survey` endpoint for more details.
    */
   async extractResources(
-    shipSymbol: operations['extract-resources']['parameters']['path']['shipSymbol'],
-    requestBody?: Required<operations['extract-resources']>['requestBody']['content']['application/json']
+    shipSymbol: operations['extract-resources']['parameters']['path']['shipSymbol']
   ): Promise<operations['extract-resources']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
       path: `/my/ships/${shipSymbol}/extract`,
-      requestBody,
     });
   }
 
@@ -419,7 +431,7 @@ export class SpaceTradersSdk {
    *     
    *     In order to install a mount, the ship must be docked and located in a waypoint that has a `Shipyard` trait. The ship also must have the mount to install in its cargo hold.
    *     
-   *     An installation fee will be deduced by the Shipyard for installing the mount on the ship. 
+   *     An installation fee will be deduced by the Shipyard for installing the mount on the ship.
    */
   async installMount(
     shipSymbol: operations['install-mount']['parameters']['path']['shipSymbol'],
@@ -511,8 +523,8 @@ export class SpaceTradersSdk {
    *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
    */
   async negotiateContract(
-    shipSymbol: operations['negotiateContract']['parameters']['path']['shipSymbol']
-  ): Promise<operations['negotiateContract']['responses']['201']['content']['application/json']['data']> {
+    shipSymbol: operations['negotiate-contract']['parameters']['path']['shipSymbol']
+  ): Promise<operations['negotiate-contract']['responses']['201']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
       path: `/my/ships/${shipSymbol}/negotiate/contract`,
@@ -597,7 +609,7 @@ export class SpaceTradersSdk {
 
   /**
    * Get Repair Ship
-   * @description Get the cost of repairing a ship.
+   * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
    */
   async getRepairShip(
     shipSymbol: operations['get-repair-ship']['parameters']['path']['shipSymbol']
@@ -672,7 +684,7 @@ export class SpaceTradersSdk {
 
   /**
    * Get Scrap Ship
-   * @description Get the amount of value that will be returned when scrapping a ship.
+   * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
    */
   async getScrapShip(
     shipSymbol: operations['get-scrap-ship']['parameters']['path']['shipSymbol']
@@ -685,7 +697,7 @@ export class SpaceTradersSdk {
 
   /**
    * Scrap Ship
-   * @description Scrap a ship, removing it from the game and returning a portion of the ship's value to the agent. The ship must be docked in a waypoint that has the `Shipyard` trait in order to use this function. To preview the amount of value that will be returned, use the Get Ship action.
+   * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
    */
   async scrapShip(
     shipSymbol: operations['scrap-ship']['parameters']['path']['shipSymbol']
@@ -822,7 +834,7 @@ export class SpaceTradersSdk {
 
   /**
    * Get System
-   * @description Get the details of a system.
+   * @description Get the details of a system. Requires the system to have been visited or charted.
    */
   async getSystem(
     systemSymbol: operations['get-system']['parameters']['path']['systemSymbol']
@@ -902,7 +914,7 @@ export class SpaceTradersSdk {
    * Get Jump Gate
    * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
    *     
-   *     Waypoints connected to this jump gate can be 
+   *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
    */
   async getJumpGate(
     waypointSymbol: operations['get-jump-gate']['parameters']['path']['waypointSymbol']

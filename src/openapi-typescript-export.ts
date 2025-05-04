@@ -12,7 +12,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Status
+         * Get the status of the game server.
          * @description Return the status of the game server.
          *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
          */
@@ -33,8 +33,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List Agents
-         * @description Fetch agents details.
+         * List all public agent details.
+         * @description List all public agent details.
          */
         get: operations["get-agents"];
         put?: never;
@@ -53,8 +53,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Public Agent
-         * @description Fetch agent details.
+         * Get public details for a specific agent.
+         * @description Get public details for a specific agent.
          */
         get: operations["get-agent"];
         put?: never;
@@ -73,7 +73,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List Factions
+         * List factions
          * @description Return a paginated list of all the factions in the game.
          */
         get: operations["get-factions"];
@@ -93,10 +93,43 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Faction
+         * Faction details
          * @description View the details of a faction.
          */
         get: operations["get-faction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -113,10 +146,43 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get Supply Chain
+         * Describes trade relationships
          * @description Describes which import and exports map to each other.
          */
         get: operations["get-supply-chain"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -174,7 +240,7 @@ export interface paths {
         };
         /**
          * Get Contract
-         * @description Get the details of a contract by ID.
+         * @description Get the details of a specific contract.
          */
         get: operations["get-contract"];
         put?: never;
@@ -245,6 +311,26 @@ export interface paths {
          * @description Fulfill a contract. Can only be used on contracts that have all of their delivery terms fulfilled.
          */
         post: operations["fulfill-contract"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/factions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get My Factions
+         * @description Retrieve factions with which the agent has reputation.
+         */
+        get: operations["get-my-factions"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -332,7 +418,7 @@ export interface paths {
          *
          *     Most waypoints in the universe are uncharted by default. These waypoints have their traits hidden until they have been charted by a ship.
          *
-         *     Charting a waypoint will record your agent as the one who created the chart, and all other agents would also be able to see the waypoint's traits.
+         *     Charting a waypoint will record your agent as the one who created the chart, and all other agents would also be able to see the waypoint's traits. Charting a waypoint gives you a one time reward of credits based on the rarity of the waypoint's traits.
          */
         post: operations["create-chart"];
         delete?: never;
@@ -674,7 +760,7 @@ export interface paths {
          *
          *     The ship must be present at any waypoint with a faction present to negotiate a contract with that faction.
          */
-        post: operations["negotiateContract"];
+        post: operations["negotiate-contract"];
         delete?: never;
         options?: never;
         head?: never;
@@ -788,7 +874,7 @@ export interface paths {
         };
         /**
          * Get Repair Ship
-         * @description Get the cost of repairing a ship.
+         * @description Get the cost of repairing a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
          */
         get: operations["get-repair-ship"];
         put?: never;
@@ -882,13 +968,13 @@ export interface paths {
         };
         /**
          * Get Scrap Ship
-         * @description Get the amount of value that will be returned when scrapping a ship.
+         * @description Get the value of scrapping a ship. Requires the ship to be docked at a waypoint that has the `Shipyard` trait.
          */
         get: operations["get-scrap-ship"];
         put?: never;
         /**
          * Scrap Ship
-         * @description Scrap a ship, removing it from the game and returning a portion of the ship's value to the agent. The ship must be docked in a waypoint that has the `Shipyard` trait in order to use this function. To preview the amount of value that will be returned, use the Get Ship action.
+         * @description Scrap a ship, removing it from the game and receiving a portion of the ship's value back in credits. The ship must be docked in a waypoint that has the `Shipyard` trait to be scrapped.
          */
         post: operations["scrap-ship"];
         delete?: never;
@@ -1013,6 +1099,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/my/socket.io": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Subscribe to events
+         * @description Subscribe to departure events for a system.
+         *
+         *               ## WebSocket Events
+         *
+         *               The following events are available:
+         *
+         *               - `systems.{systemSymbol}.departure`: A ship has departed from the system.
+         *
+         *               ## Subscribe using a message with the following format:
+         *
+         *               ```json
+         *               {
+         *                 "action": "subscribe",
+         *                 "systemSymbol": "{systemSymbol}"
+         *               }
+         *               ```
+         *
+         *               ## Unsubscribe using a message with the following format:
+         *
+         *               ```json
+         *               {
+         *                 "action": "unsubscribe",
+         *                 "systemSymbol": "{systemSymbol}"
+         *               }
+         *               ```
+         */
+        get: operations["websocket-departure-events"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/register": {
         parameters: {
             query?: never;
@@ -1071,7 +1201,7 @@ export interface paths {
         };
         /**
          * Get System
-         * @description Get the details of a system.
+         * @description Get the details of a system. Requires the system to have been visited or charted.
          */
         get: operations["get-system"];
         put?: never;
@@ -1179,7 +1309,7 @@ export interface paths {
          * Get Jump Gate
          * @description Get jump gate details for a waypoint. Requires a waypoint of type `JUMP_GATE` to use.
          *
-         *     Waypoints connected to this jump gate can be
+         *     Waypoints connected to this jump gate can be found by querying the waypoints in the system.
          */
         get: operations["get-jump-gate"];
         put?: never;
@@ -1244,7 +1374,7 @@ export interface components {
         /** @description Agent details. */
         Agent: {
             /** @description Account ID that is tied to this agent. Only included on your own agent. */
-            accountId?: string;
+            accountId: string;
             /** @description Symbol of the agent. */
             symbol: string;
             /** @description The headquarters of the agent. */
@@ -1261,14 +1391,27 @@ export interface components {
         };
         /** @description The chart of a system or waypoint, which makes the location visible to other agents. */
         Chart: {
-            waypointSymbol?: components["schemas"]["WaypointSymbol"];
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
             /** @description The agent that submitted the chart for this waypoint. */
-            submittedBy?: string;
+            submittedBy: string;
             /**
              * Format: date-time
              * @description The time the chart for this waypoint was submitted.
              */
-            submittedOn?: string;
+            submittedOn: string;
+        };
+        /** @description Result of a chart transaction. */
+        ChartTransaction: {
+            waypointSymbol: components["schemas"]["WaypointSymbol"];
+            /** @description The symbol of the ship. */
+            shipSymbol: string;
+            /** @description The total price of the transaction. */
+            totalPrice: number;
+            /**
+             * Format: date-time
+             * @description The timestamp of the transaction.
+             */
+            timestamp: string;
         };
         /** @description The construction details of a waypoint. */
         Construction: {
@@ -1407,6 +1550,7 @@ export interface components {
          * @enum {string}
          */
         FactionTraitSymbol: "BUREAUCRATIC" | "SECRETIVE" | "CAPITALISTIC" | "INDUSTRIOUS" | "PEACEFUL" | "DISTRUSTFUL" | "WELCOMING" | "SMUGGLERS" | "SCAVENGERS" | "REBELLIOUS" | "EXILES" | "PIRATES" | "RAIDERS" | "CLAN" | "GUILD" | "DOMINION" | "FRINGE" | "FORSAKEN" | "ISOLATED" | "LOCALIZED" | "ESTABLISHED" | "NOTABLE" | "DOMINANT" | "INESCAPABLE" | "INNOVATIVE" | "BOLD" | "VISIONARY" | "CURIOUS" | "DARING" | "EXPLORATORY" | "RESOURCEFUL" | "FLEXIBLE" | "COOPERATIVE" | "UNITED" | "STRATEGIC" | "INTELLIGENT" | "RESEARCH_FOCUSED" | "COLLABORATIVE" | "PROGRESSIVE" | "MILITARISTIC" | "TECHNOLOGICALLY_ADVANCED" | "AGGRESSIVE" | "IMPERIALISTIC" | "TREASURE_HUNTERS" | "DEXTEROUS" | "UNPREDICTABLE" | "BRUTAL" | "FLEETING" | "ADAPTABLE" | "SELF_SUFFICIENT" | "DEFENSIVE" | "PROUD" | "DIVERSE" | "INDEPENDENT" | "SELF_INTERESTED" | "FRAGMENTED" | "COMMERCIAL" | "FREE_MARKETS" | "ENTREPRENEURIAL";
+        /** @description Details of a jump gate waypoint. */
         JumpGate: {
             symbol: components["schemas"]["WaypointSymbol"];
             /** @description All the gates that are connected to this waypoint. */
@@ -1481,6 +1625,22 @@ export interface components {
              * @default 10
              */
             limit: number;
+        };
+        /** @description Public agent details. */
+        PublicAgent: {
+            /** @description Symbol of the agent. */
+            symbol: string;
+            /** @description The headquarters of the agent. */
+            headquarters: string;
+            /**
+             * Format: int64
+             * @description The number of credits the agent has available. Credits can be negative if funds have been overdrawn.
+             */
+            credits: number;
+            /** @description The faction the agent started with. */
+            startingFaction: string;
+            /** @description How many ships are owned by the agent. */
+            shipCount: number;
         };
         /** @description Result of a repair transaction. */
         RepairTransaction: {
@@ -1575,13 +1735,13 @@ export interface components {
             frame: components["schemas"]["ShipFrame"];
             reactor: components["schemas"]["ShipReactor"];
             engine: components["schemas"]["ShipEngine"];
-            cooldown: components["schemas"]["Cooldown"];
             /** @description Modules installed in this ship. */
             modules: components["schemas"]["ShipModule"][];
             /** @description Mounts installed in this ship. */
             mounts: components["schemas"]["ShipMount"][];
             cargo: components["schemas"]["ShipCargo"];
             fuel: components["schemas"]["ShipFuel"];
+            cooldown: components["schemas"]["Cooldown"];
         };
         /** @description Ship cargo details. */
         ShipCargo: {
@@ -1619,7 +1779,10 @@ export interface components {
         ShipComponentQuality: number;
         /** @description An event that represents damage or wear to a ship's reactor, frame, or engine, reducing the condition of the ship. */
         ShipConditionEvent: {
-            /** @enum {string} */
+            /**
+             * @description The symbol of the event that occurred.
+             * @enum {string}
+             */
             symbol: "REACTOR_OVERLOAD" | "ENERGY_SPIKE_FROM_MINERAL" | "SOLAR_FLARE_INTERFERENCE" | "COOLANT_LEAK" | "POWER_DISTRIBUTION_FLUCTUATION" | "MAGNETIC_FIELD_DISRUPTION" | "HULL_MICROMETEORITE_STRIKES" | "STRUCTURAL_STRESS_FRACTURES" | "CORROSIVE_MINERAL_CONTAMINATION" | "THERMAL_EXPANSION_MISMATCH" | "VIBRATION_DAMAGE_FROM_DRILLING" | "ELECTROMAGNETIC_FIELD_INTERFERENCE" | "IMPACT_WITH_EXTRACTED_DEBRIS" | "FUEL_EFFICIENCY_DEGRADATION" | "COOLANT_SYSTEM_AGEING" | "DUST_MICROABRASIONS" | "THRUSTER_NOZZLE_WEAR" | "EXHAUST_PORT_CLOGGING" | "BEARING_LUBRICATION_FADE" | "SENSOR_CALIBRATION_DRIFT" | "HULL_MICROMETEORITE_DAMAGE" | "SPACE_DEBRIS_COLLISION" | "THERMAL_STRESS" | "VIBRATION_OVERLOAD" | "PRESSURE_DIFFERENTIAL_STRESS" | "ELECTROMAGNETIC_SURGE_EFFECTS" | "ATMOSPHERIC_ENTRY_HEAT";
             /** @enum {string} */
             component: "FRAME" | "REACTOR" | "ENGINE";
@@ -1656,10 +1819,10 @@ export interface components {
             symbol: "ENGINE_IMPULSE_DRIVE_I" | "ENGINE_ION_DRIVE_I" | "ENGINE_ION_DRIVE_II" | "ENGINE_HYPER_DRIVE_I";
             /** @description The name of the engine. */
             name: string;
-            /** @description The description of the engine. */
-            description: string;
             condition: components["schemas"]["ShipComponentCondition"];
             integrity: components["schemas"]["ShipComponentIntegrity"];
+            /** @description The description of the engine. */
+            description: string;
             /** @description The speed stat of this engine. The higher the speed, the faster a ship can travel from one point to another. Reduces the time of arrival when navigating the ship. */
             speed: number;
             requirements: components["schemas"]["ShipRequirements"];
@@ -1674,10 +1837,10 @@ export interface components {
             symbol: "FRAME_PROBE" | "FRAME_DRONE" | "FRAME_INTERCEPTOR" | "FRAME_RACER" | "FRAME_FIGHTER" | "FRAME_FRIGATE" | "FRAME_SHUTTLE" | "FRAME_EXPLORER" | "FRAME_MINER" | "FRAME_LIGHT_FREIGHTER" | "FRAME_HEAVY_FREIGHTER" | "FRAME_TRANSPORT" | "FRAME_DESTROYER" | "FRAME_CRUISER" | "FRAME_CARRIER" | "FRAME_BULK_FREIGHTER";
             /** @description Name of the frame. */
             name: string;
-            /** @description Description of the frame. */
-            description: string;
             condition: components["schemas"]["ShipComponentCondition"];
             integrity: components["schemas"]["ShipComponentIntegrity"];
+            /** @description Description of the frame. */
+            description: string;
             /** @description The amount of slots that can be dedicated to modules installed in the ship. Each installed module take up a number of slots, and once there are no more slots, no new modules can be installed. */
             moduleSlots: number;
             /** @description The amount of slots that can be dedicated to mounts installed in the ship. Each installed mount takes up a number of points, and once there are no more points remaining, no new mounts can be installed. */
@@ -1727,27 +1890,27 @@ export interface components {
              * @enum {string}
              */
             symbol: "MODULE_MINERAL_PROCESSOR_I" | "MODULE_GAS_PROCESSOR_I" | "MODULE_CARGO_HOLD_I" | "MODULE_CARGO_HOLD_II" | "MODULE_CARGO_HOLD_III" | "MODULE_CREW_QUARTERS_I" | "MODULE_ENVOY_QUARTERS_I" | "MODULE_PASSENGER_CABIN_I" | "MODULE_MICRO_REFINERY_I" | "MODULE_ORE_REFINERY_I" | "MODULE_FUEL_REFINERY_I" | "MODULE_SCIENCE_LAB_I" | "MODULE_JUMP_DRIVE_I" | "MODULE_JUMP_DRIVE_II" | "MODULE_JUMP_DRIVE_III" | "MODULE_WARP_DRIVE_I" | "MODULE_WARP_DRIVE_II" | "MODULE_WARP_DRIVE_III" | "MODULE_SHIELD_GENERATOR_I" | "MODULE_SHIELD_GENERATOR_II";
-            /** @description Modules that provide capacity, such as cargo hold or crew quarters will show this value to denote how much of a bonus the module grants. */
-            capacity?: number;
-            /** @description Modules that have a range will such as a sensor array show this value to denote how far can the module reach with its capabilities. */
-            range?: number;
             /** @description Name of this module. */
             name: string;
             /** @description Description of this module. */
             description: string;
+            /** @description Modules that provide capacity, such as cargo hold or crew quarters will show this value to denote how much of a bonus the module grants. */
+            capacity?: number;
+            /** @description Modules that have a range will such as a sensor array show this value to denote how far can the module reach with its capabilities. */
+            range?: number;
             requirements: components["schemas"]["ShipRequirements"];
         };
         /** @description A mount is installed on the exterier of a ship. */
         ShipMount: {
             /**
-             * @description Symbo of this mount.
+             * @description Symbol of this mount.
              * @enum {string}
              */
             symbol: "MOUNT_GAS_SIPHON_I" | "MOUNT_GAS_SIPHON_II" | "MOUNT_GAS_SIPHON_III" | "MOUNT_SURVEYOR_I" | "MOUNT_SURVEYOR_II" | "MOUNT_SURVEYOR_III" | "MOUNT_SENSOR_ARRAY_I" | "MOUNT_SENSOR_ARRAY_II" | "MOUNT_SENSOR_ARRAY_III" | "MOUNT_MINING_LASER_I" | "MOUNT_MINING_LASER_II" | "MOUNT_MINING_LASER_III" | "MOUNT_LASER_CANNON_I" | "MOUNT_MISSILE_LAUNCHER_I" | "MOUNT_TURRET_I";
             /** @description Name of this mount. */
             name: string;
             /** @description Description of this mount. */
-            description?: string;
+            description: string;
             /** @description Mounts that have this value, such as mining lasers, denote how powerful this mount's capabilities are. */
             strength?: number;
             /** @description Mounts that have this value denote what goods can be produced from using the mount. */
@@ -1808,10 +1971,10 @@ export interface components {
             symbol: "REACTOR_SOLAR_I" | "REACTOR_FUSION_I" | "REACTOR_FISSION_I" | "REACTOR_CHEMICAL_I" | "REACTOR_ANTIMATTER_I";
             /** @description Name of the reactor. */
             name: string;
-            /** @description Description of the reactor. */
-            description: string;
             condition: components["schemas"]["ShipComponentCondition"];
             integrity: components["schemas"]["ShipComponentIntegrity"];
+            /** @description Description of the reactor. */
+            description: string;
             /** @description The amount of power provided by this reactor. The more power a reactor provides to the ship, the lower the cooldown it gets when using a module or mount that taxes the ship's power. */
             powerOutput: number;
             requirements: components["schemas"]["ShipRequirements"];
@@ -1859,20 +2022,28 @@ export interface components {
             /** @description The fee to modify a ship at this shipyard. This includes installing or removing modules and mounts on a ship. In the case of mounts, the fee is a flat rate per mount. In the case of modules, the fee is per slot the module occupies. */
             modificationsFee: number;
         };
+        /** @description Ship details available at a shipyard. */
         ShipyardShip: {
             type: components["schemas"]["ShipType"];
+            /** @description Name of the ship. */
             name: string;
+            /** @description Description of the ship. */
             description: string;
-            supply: components["schemas"]["SupplyLevel"];
             activity?: components["schemas"]["ActivityLevel"];
+            supply: components["schemas"]["SupplyLevel"];
+            /** @description The purchase price of the ship. */
             purchasePrice: number;
             frame: components["schemas"]["ShipFrame"];
             reactor: components["schemas"]["ShipReactor"];
             engine: components["schemas"]["ShipEngine"];
+            /** @description Modules installed in this ship. */
             modules: components["schemas"]["ShipModule"][];
+            /** @description Mounts installed in this ship. */
             mounts: components["schemas"]["ShipMount"][];
             crew: {
+                /** @description The minimum number of crew members required to maintain the ship. */
                 required: number;
+                /** @description The maximum number of crew members the ship can support. */
                 capacity: number;
             };
         };
@@ -1926,27 +2097,26 @@ export interface components {
              * @description The date and time when the survey expires. After this date and time, the survey will no longer be available for extraction.
              */
             expiration: string;
-            /**
-             * @description The size of the deposit. This value indicates how much can be extracted from the survey before it is exhausted.
-             * @enum {string}
-             */
-            size: "SMALL" | "MODERATE" | "LARGE";
+            size: components["schemas"]["SurveySize"];
         };
         /** @description A surveyed deposit of a mineral or resource available for extraction. */
         SurveyDeposit: {
             /** @description The symbol of the deposit. */
-            symbol: string;
+            symbol: components["schemas"]["TradeSymbol"];
         };
+        /**
+         * @description The size of the deposit. This value indicates how much can be extracted from the survey before it is exhausted.
+         * @enum {string}
+         */
+        SurveySize: "SMALL" | "MODERATE" | "LARGE";
         /** @description System details. */
         System: {
+            /** @description The constellation that the system is part of. */
+            constellation?: string;
             /** @description The symbol of the system. */
             symbol: string;
             /** @description The symbol of the sector. */
             sectorSymbol: string;
-            /** @description The constellation that the system is part of. */
-            constellation?: string;
-            /** @description The name of the system. */
-            name?: string;
             type: components["schemas"]["SystemType"];
             /** @description Relative position of the system in the sector in the x axis. */
             x: number;
@@ -1956,6 +2126,8 @@ export interface components {
             waypoints: components["schemas"]["SystemWaypoint"][];
             /** @description Factions that control this system. */
             factions: components["schemas"]["SystemFaction"][];
+            /** @description The name of the system. */
+            name?: string;
         };
         SystemFaction: {
             symbol: components["schemas"]["FactionSymbol"];
@@ -2027,6 +2199,7 @@ export interface components {
             description: string;
         };
         /**
+         * Waypoint Modifier Symbol
          * @description The unique identifier of the modifier.
          * @enum {string}
          */
@@ -2130,6 +2303,7 @@ export interface operations {
                         }[];
                         links: {
                             name: string;
+                            /** Format: uri */
                             url: string;
                         }[];
                     };
@@ -2158,7 +2332,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Agent"][];
+                        data: components["schemas"]["PublicAgent"][];
                         meta: components["schemas"]["Meta"];
                     };
                 };
@@ -2177,14 +2351,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched agent details. */
+            /** @description Default Response */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["Agent"];
+                        data: components["schemas"]["PublicAgent"];
                     };
                 };
             };
@@ -2230,7 +2404,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched a faction. */
+            /** @description Default Response */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2261,7 +2435,7 @@ export interface operations {
                     "application/json": {
                         data: {
                             exportToImportMap: {
-                                string?: string[];
+                                [key: string]: string[];
                             };
                         };
                     };
@@ -2324,7 +2498,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The contract ID */
+                /** @description The contract ID to accept. */
                 contractId: string;
             };
             cookie?: never;
@@ -2364,8 +2538,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
                             contract: components["schemas"]["Contract"];
+                            agent: components["schemas"]["Agent"];
                         };
                     };
                 };
@@ -2382,14 +2556,20 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     /** @description Symbol of a ship located in the destination to deliver a contract and that has a good to deliver in its cargo. */
                     shipSymbol: string;
-                    /** @description The symbol of the good to deliver. */
+                    /**
+                     * @description The symbol of the good to deliver.
+                     * @example IRON_ORE
+                     */
                     tradeSymbol: string;
-                    /** @description Amount of units to deliver. */
+                    /**
+                     * @description Amount of units to deliver.
+                     * @example 10
+                     */
                     units: number;
                 };
             };
@@ -2431,9 +2611,40 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
                             contract: components["schemas"]["Contract"];
+                            agent: components["schemas"]["Agent"];
                         };
+                    };
+                };
+            };
+        };
+    };
+    "get-my-factions": {
+        parameters: {
+            query?: {
+                /** @description What entry offset to request */
+                page?: number;
+                /** @description How many entries to return per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            symbol: string;
+                            reputation: number;
+                        }[];
+                        meta: components["schemas"]["Meta"];
                     };
                 };
             };
@@ -2474,7 +2685,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     shipType: components["schemas"]["ShipType"];
@@ -2492,8 +2703,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
                             ship: components["schemas"]["Ship"];
+                            agent: components["schemas"]["Agent"];
                             transaction: components["schemas"]["ShipyardTransaction"];
                         };
                     };
@@ -2563,7 +2774,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Created */
+            /** @description Successfully charted waypoint. */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -2573,6 +2784,8 @@ export interface operations {
                         data: {
                             chart: components["schemas"]["Chart"];
                             waypoint: components["schemas"]["Waypoint"];
+                            transaction: components["schemas"]["ChartTransaction"];
+                            agent: components["schemas"]["Agent"];
                         };
                     };
                 };
@@ -2607,7 +2820,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": unknown;
+                };
             };
         };
     };
@@ -2643,21 +2858,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /** @deprecated */
-                    survey?: components["schemas"]["Survey"];
-                };
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description Extracted successfully. */
+            /** @description Successfully extracted resources. */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -2665,9 +2873,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            cooldown: components["schemas"]["Cooldown"];
                             extraction: components["schemas"]["Extraction"];
+                            cooldown: components["schemas"]["Cooldown"];
                             cargo: components["schemas"]["ShipCargo"];
+                            modifiers?: components["schemas"]["WaypointModifier"][];
                             events: components["schemas"]["ShipConditionEvent"][];
                         };
                     };
@@ -2680,7 +2889,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -2691,7 +2900,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Extracted successfully. */
+            /** @description Successfully extracted resources. */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -2699,9 +2908,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            cooldown: components["schemas"]["Cooldown"];
                             extraction: components["schemas"]["Extraction"];
+                            cooldown: components["schemas"]["Cooldown"];
                             cargo: components["schemas"]["ShipCargo"];
+                            modifiers?: components["schemas"]["WaypointModifier"][];
                             events: components["schemas"]["ShipConditionEvent"][];
                         };
                     };
@@ -2714,12 +2924,12 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     symbol: components["schemas"]["TradeSymbol"];
@@ -2749,12 +2959,12 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     /** @description The symbol of the waypoint to jump to. The destination must be a connected waypoint. */
@@ -2786,7 +2996,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The symbol of the ship */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -2811,15 +3021,15 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The symbol of the ship */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    /** @description The symbol of the module to install */
+                    /** @description The symbol of the module to install. */
                     symbol: string;
                 };
             };
@@ -2836,13 +3046,7 @@ export interface operations {
                             agent: components["schemas"]["Agent"];
                             modules: components["schemas"]["ShipModule"][];
                             cargo: components["schemas"]["ShipCargo"];
-                            transaction: {
-                                waypointSymbol: string;
-                                shipSymbol: string;
-                                tradeSymbol: string;
-                                totalPrice: number;
-                                timestamp: string;
-                            };
+                            transaction: components["schemas"]["ShipModificationTransaction"];
                         };
                     };
                 };
@@ -2854,15 +3058,15 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The symbol of the ship */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    /** @description The symbol of the module to remove */
+                    /** @description The symbol of the module to remove. */
                     symbol: string;
                 };
             };
@@ -2879,13 +3083,7 @@ export interface operations {
                             agent: components["schemas"]["Agent"];
                             modules: components["schemas"]["ShipModule"][];
                             cargo: components["schemas"]["ShipCargo"];
-                            transaction: {
-                                waypointSymbol: string;
-                                shipSymbol: string;
-                                tradeSymbol: string;
-                                totalPrice: number;
-                                timestamp: string;
-                            };
+                            transaction: components["schemas"]["ShipModificationTransaction"];
                         };
                     };
                 };
@@ -2897,14 +3095,14 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Got installed mounts. */
+            /** @description Successfully retrieved ship mounts. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2922,14 +3120,15 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
+                    /** @description The symbol of the mount to install. */
                     symbol: string;
                 };
             };
@@ -2959,12 +3158,12 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     /** @description The symbol of the mount to remove. */
@@ -2997,7 +3196,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3022,7 +3221,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3035,7 +3234,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description The updated data of the ship. */
+            /** @description Success response for updating the nav configuration of a ship. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3057,15 +3256,15 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    /** @description The target destination. */
+                    /** @description The symbol of the waypoint to navigate/warp to. */
                     waypointSymbol: string;
                 };
             };
@@ -3079,8 +3278,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            fuel: components["schemas"]["ShipFuel"];
                             nav: components["schemas"]["ShipNav"];
+                            fuel: components["schemas"]["ShipFuel"];
                             events: components["schemas"]["ShipConditionEvent"][];
                         };
                     };
@@ -3088,12 +3287,12 @@ export interface operations {
             };
         };
     };
-    negotiateContract: {
+    "negotiate-contract": {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3120,7 +3319,6 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3147,16 +3345,16 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     symbol: components["schemas"]["TradeSymbol"];
-                    /** @description Amounts of units to purchase. */
+                    /** @description The number of units of the good to purchase. */
                     units: number;
                 };
             };
@@ -3170,9 +3368,9 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
                             cargo: components["schemas"]["ShipCargo"];
                             transaction: components["schemas"]["MarketTransaction"];
+                            agent: components["schemas"]["Agent"];
                         };
                     };
                 };
@@ -3189,7 +3387,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     /**
@@ -3214,14 +3412,14 @@ export interface operations {
                             /** @description Goods that were produced by this refining process. */
                             produced: {
                                 /** @description Symbol of the good. */
-                                tradeSymbol: string;
+                                tradeSymbol: components["schemas"]["TradeSymbol"];
                                 /** @description Amount of units of the good. */
                                 units: number;
                             }[];
                             /** @description Goods that were consumed during this refining process. */
                             consumed: {
                                 /** @description Symbol of the good. */
-                                tradeSymbol: string;
+                                tradeSymbol: components["schemas"]["TradeSymbol"];
                                 /** @description Amount of units of the good. */
                                 units: number;
                             }[];
@@ -3236,7 +3434,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3250,7 +3448,8 @@ export interface operations {
                      */
                     units?: number;
                     /**
-                     * @description Wether to use the FUEL thats in your cargo or not. Default: false
+                     * @description Wether to use the FUEL thats in your cargo or not.
+                     * @default false
                      * @example false
                      */
                     fromCargo?: boolean;
@@ -3268,6 +3467,7 @@ export interface operations {
                         data: {
                             agent: components["schemas"]["Agent"];
                             fuel: components["schemas"]["ShipFuel"];
+                            cargo?: components["schemas"]["ShipCargo"];
                             transaction: components["schemas"]["MarketTransaction"];
                         };
                     };
@@ -3280,7 +3480,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3307,7 +3507,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3336,7 +3536,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3365,7 +3565,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3394,7 +3594,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3423,7 +3623,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3450,7 +3650,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3478,16 +3678,19 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Symbol of a ship. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     symbol: components["schemas"]["TradeSymbol"];
-                    /** @description Amounts of units to sell of the selected good. */
+                    /**
+                     * @description Amounts of units to sell of the selected good.
+                     * @example 100
+                     */
                     units: number;
                 };
             };
@@ -3501,9 +3704,9 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
                             cargo: components["schemas"]["ShipCargo"];
                             transaction: components["schemas"]["MarketTransaction"];
+                            agent: components["schemas"]["Agent"];
                         };
                     };
                 };
@@ -3515,7 +3718,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
@@ -3530,8 +3733,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            cooldown: components["schemas"]["Cooldown"];
                             siphon: components["schemas"]["Siphon"];
+                            cooldown: components["schemas"]["Cooldown"];
                             cargo: components["schemas"]["ShipCargo"];
                             events: components["schemas"]["ShipConditionEvent"][];
                         };
@@ -3574,12 +3777,12 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The transferring ship's symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
                     tradeSymbol: components["schemas"]["TradeSymbol"];
@@ -3591,7 +3794,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Transfer successful. */
+            /** @description Cargo transferred successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3600,6 +3803,7 @@ export interface operations {
                     "application/json": {
                         data: {
                             cargo: components["schemas"]["ShipCargo"];
+                            targetCargo: components["schemas"]["ShipCargo"];
                         };
                     };
                 };
@@ -3611,15 +3815,15 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The ship symbol. */
+                /** @description The symbol of the ship. */
                 shipSymbol: string;
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    /** @description The target destination. */
+                    /** @description The symbol of the waypoint to navigate/warp to. */
                     waypointSymbol: string;
                 };
             };
@@ -3633,11 +3837,30 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            fuel: components["schemas"]["ShipFuel"];
                             nav: components["schemas"]["ShipNav"];
+                            fuel: components["schemas"]["ShipFuel"];
+                            events: components["schemas"]["ShipConditionEvent"][];
                         };
                     };
                 };
+            };
+        };
+    };
+    "websocket-departure-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -3648,16 +3871,19 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    faction: components["schemas"]["FactionSymbol"];
                     /**
                      * @description Your desired agent symbol. This will be a unique name used to represent your agent, and will be the prefix for your ships.
                      * @example BADGER
                      */
                     symbol: string;
-                    /** @description Your email address. This is used if you reserved your call sign between resets. */
+                    faction: components["schemas"]["FactionSymbol"];
+                    /**
+                     * Format: email
+                     * @description Your email address. This is used if you reserved your call sign between resets.
+                     */
                     email?: string;
                 };
             };
@@ -3671,12 +3897,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            agent: components["schemas"]["Agent"];
-                            contract: components["schemas"]["Contract"];
-                            faction: components["schemas"]["Faction"];
-                            ships?: components["schemas"]["Ship"][];
                             /** @description A Bearer token for accessing secured API endpoints. */
                             token: string;
+                            agent: components["schemas"]["Agent"];
+                            faction: components["schemas"]["Faction"];
+                            contract: components["schemas"]["Contract"];
+                            ships: components["schemas"]["Ship"][];
                         };
                     };
                 };
@@ -3716,7 +3942,6 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description The system symbol */
                 systemSymbol: string;
             };
             cookie?: never;
@@ -3746,18 +3971,17 @@ export interface operations {
                 /** @description Filter waypoints by type. */
                 type?: components["schemas"]["WaypointType"];
                 /** @description Filter waypoints by one or more traits. */
-                traits?: components["schemas"]["WaypointTraitSymbol"] | components["schemas"]["WaypointTraitSymbol"][];
+                traits?: components["schemas"]["WaypointTraitSymbol"][];
             };
             header?: never;
             path: {
-                /** @description The system symbol */
                 systemSymbol: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched all waypoints in the system. */
+            /** @description Successfully listed waypoints. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3785,7 +4009,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched waypoint. */
+            /** @description Successfully fetched waypoint details. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3837,14 +4061,23 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    /** @description Symbol of the ship to use. */
+                    /**
+                     * @description The symbol of the ship supplying construction materials.
+                     * @example DODO-1
+                     */
                     shipSymbol: string;
-                    /** @description The symbol of the good to supply. */
-                    tradeSymbol: string;
-                    /** @description Amount of units to supply. */
+                    /**
+                     * @description The symbol of the good to supply.
+                     * @example IRON_ORE
+                     */
+                    tradeSymbol: components["schemas"]["TradeSymbol"];
+                    /**
+                     * @description Amount of units to supply.
+                     * @example 10
+                     */
                     units: number;
                 };
             };
@@ -3880,7 +4113,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Successfully fetched jump gate. */
+            /** @description Jump gate details retrieved successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;

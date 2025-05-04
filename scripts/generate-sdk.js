@@ -39,9 +39,9 @@ const output = [
   '  }',
 ];
 
-for (const [path, pathDefinition] of Object.entries(openApiDoc.paths).sort(([aPath], [bPath]) => aPath.localeCompare(bPath))) {
+for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
   
-  for (const [method, operationDefinition] of Object.entries(pathDefinition).sort(([aMethod], [bMethod]) => aMethod.localeCompare(bMethod))) {
+  for (const [method, operationDefinition] of Object.entries(pathDefinition)) {
     if (method === 'parameters') {
       continue;
     }
@@ -49,6 +49,11 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths).sort(([aPa
     const operationId = operationDefinition.operationId;
     if (!operationId) {
       console.log('No operationId for', method, path, operationDefinition);
+      continue;
+    }
+
+    if (operationId.startsWith('websocket-')) {
+      console.log('Skipping websocket operations for now:', operationId);
       continue;
     }
 

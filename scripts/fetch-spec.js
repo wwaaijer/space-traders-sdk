@@ -13,6 +13,11 @@ const openApiDocPath = './tmp/openapi-spec.json';
 
   await fs.mkdir(path.dirname(openApiDocPath), { recursive: true });
 
+
+  content.components.schemas = Object.fromEntries(
+    Object.entries(content.components.schemas)
+      .sort(([aName], [bName]) => aName.localeCompare(bName))
+  );
   content.paths = Object.fromEntries(
     Object.entries(content.paths)
       .sort(([aPath], [bPath]) => aPath.localeCompare(bPath))

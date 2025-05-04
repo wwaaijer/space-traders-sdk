@@ -1,8 +1,10 @@
 const fs = require('fs/promises');
 const path = require('path');
 
+const version = process.argv[2];
+
 // URL taken from the SpaceTraders API documentation
-const openApiDocUrl = 'https://spacetraders.io/SpaceTraders.json';
+const openApiDocUrl = version === 'staging' ? 'https://api.staging.spacetraders.io/v2/documentation/json' : 'https://spacetraders.io/SpaceTraders.json';
 const openApiDocPath = './tmp/openapi-spec.json';
 
 (async () => {

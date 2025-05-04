@@ -39,14 +39,19 @@ const output = [
   '  }',
 ];
 
-for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
+for (const [path, pathDefinition] of Object.entries(openApiDoc.paths).sort(([aPath], [bPath]) => aPath.localeCompare(bPath))) {
   
-  for (const [method, operationDefinition] of Object.entries(pathDefinition)) {
+  for (const [method, operationDefinition] of Object.entries(pathDefinition).sort(([aMethod], [bMethod]) => aMethod.localeCompare(bMethod))) {
     if (method === 'parameters') {
       continue;
     }
     
     const operationId = operationDefinition.operationId;
+    if (!operationId) {
+      console.log('No operationId for', method, path, operationDefinition);
+      continue;
+    }
+
     const operationName = kebabToCamel(operationId);
     const parameters = [];
     

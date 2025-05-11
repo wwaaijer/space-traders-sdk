@@ -7,3 +7,6 @@
 ## [1.1.0] - 2025-05-11
 - Added `getMyAgentEvents()` and `getMyAccount()` methods.
 - The request body for both `refuelShip` and `patchShipNav` are now required.
+
+## [1.2.0] - ???????
+- Added an `onError` callback to listen for errors

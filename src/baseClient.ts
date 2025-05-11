@@ -15,48 +15,57 @@ export class BaseClient {
   }
 
   async request(request: SpaceTradersRequest) {
-    if (this.options?.onRequest) {
-      this.options.onRequest(request);
-    }
+    let response: Response;
 
-    const urlParts = [baseUrl, request.path];
-    if (request.query) {
-      urlParts.push(`?${buildQueryString(request.query)}`);
-    }
-    const url = urlParts.join('');
-
-    const fetchOptions: RequestInit = {
-      method: request.method,
-      headers: {},
-    };
-
-    if (this.options?.token) {
-      fetchOptions.headers['Authorization'] = `Bearer ${this.options.token}`;
-    }
-
-    if (request.requestBody) {
-      fetchOptions.headers['Content-Type'] = 'application/json';
-      fetchOptions.body = JSON.stringify(request.requestBody);
-    }
-
-    const response = await this.limiter.enqueue(() => fetch(url, fetchOptions));
-
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      if (this.options?.onResponse) {
-        this.options.onResponse({ request, responseBody });
+    try {
+      if (this.options?.onRequest) {
+        this.options.onRequest(request);
       }
-
-      const responseKeys = Object.keys(responseBody);
-
-      if (responseKeys.length === 1 && responseKeys[0] === 'data') {
-        return responseBody.data;
+  
+      const urlParts = [baseUrl, request.path];
+      if (request.query) {
+        urlParts.push(`?${buildQueryString(request.query)}`);
       }
-
-      return responseBody;
-    } else {
-      await handleErrorResponse(response);
+      const url = urlParts.join('');
+  
+      const fetchOptions: RequestInit = {
+        method: request.method,
+        headers: {},
+      };
+  
+      if (this.options?.token) {
+        fetchOptions.headers['Authorization'] = `Bearer ${this.options.token}`;
+      }
+  
+      if (request.requestBody) {
+        fetchOptions.headers['Content-Type'] = 'application/json';
+        fetchOptions.body = JSON.stringify(request.requestBody);
+      }
+  
+      response = await this.limiter.enqueue(() => fetch(url, fetchOptions));
+  
+      if (response.ok) {
+        const responseBody = await response.json();
+  
+        if (this.options?.onResponse) {
+          this.options.onResponse({ request, responseBody });
+        }
+  
+        const responseKeys = Object.keys(responseBody);
+  
+        if (responseKeys.length === 1 && responseKeys[0] === 'data') {
+          return responseBody.data;
+        }
+  
+        return responseBody;
+      } else {
+        await handleErrorResponse(response);
+      }
+    } catch (error) {
+      if (this.options?.onError) {
+        this.options.onError({ request, response, error });
+      }
+      throw error; 
     }
   }
 }

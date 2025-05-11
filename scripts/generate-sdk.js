@@ -4,7 +4,6 @@ const fs = require('fs');
 // TODO:
 // [ ] Rate limiting errors
 // [ ] Proper rate limiting?
-// [ ] Auto generate the method overview in the README?
 // [ ] Paged endpoint fetcher
 // [ ] Introduce extra methods using the paged fetcher?
 // ...
@@ -12,7 +11,6 @@ const fs = require('fs');
 //        Currently not even using the whole paths object/interface
 //        Switch to the Node API of openapi-typescript and strip that whole section from the `ts.node[]` return value?
 // [ ] Use ts.nodes like openapi-typescript does?
-// [ ] `onError` option?
 
 const mode = process.argv[2];
 

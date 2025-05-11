@@ -335,6 +335,17 @@ export class SpaceTradersSdk {
   }
 
   /**
+   * Get Agent Events
+   * @description Get recent events for your agent.
+   */
+  async getMyAgentEvents(): Promise<operations['get-my-agent-events']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/agent/events`,
+    });
+  }
+
+  /**
    * List Ships
    * @description Return a paginated list of all of ships under your agent's ownership.
    */
@@ -361,6 +372,17 @@ export class SpaceTradersSdk {
       method: 'POST',
       path: `/my/ships`,
       requestBody,
+    });
+  }
+
+  /**
+   * Get Account
+   * @description Fetch your account details.
+   */
+  async getMyAccount(): Promise<operations['get-my-account']['responses']['200']['content']['application/json']['data']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/my/account`,
     });
   }
 
@@ -691,7 +713,7 @@ export class SpaceTradersSdk {
    */
   async refuelShip(
     shipSymbol: operations['refuel-ship']['parameters']['path']['shipSymbol'],
-    requestBody?: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
+    requestBody: Required<operations['refuel-ship']>['requestBody']['content']['application/json']
   ): Promise<operations['refuel-ship']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'POST',
@@ -924,7 +946,7 @@ export class SpaceTradersSdk {
    */
   async patchShipNav(
     shipSymbol: operations['patch-ship-nav']['parameters']['path']['shipSymbol'],
-    requestBody?: Required<operations['patch-ship-nav']>['requestBody']['content']['application/json']
+    requestBody: Required<operations['patch-ship-nav']>['requestBody']['content']['application/json']
   ): Promise<operations['patch-ship-nav']['responses']['200']['content']['application/json']['data']> {
     return this.client.request({
       method: 'PATCH',

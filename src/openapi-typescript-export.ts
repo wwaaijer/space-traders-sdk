@@ -571,6 +571,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/my/agent/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Agent Events
+         * @description Get recent events for your agent.
+         */
+        get: operations["get-my-agent-events"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/my/ships": {
         parameters: {
             query?: never;
@@ -591,6 +611,26 @@ export interface paths {
          *     Shipyards typically offer ship types, which are predefined templates of ships that have dedicated roles. A template comes with a preset of an engine, a reactor, and a frame. It may also include a few modules and mounts.
          */
         post: operations["purchase-ship"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/my/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Account
+         * @description Fetch your account details.
+         */
+        get: operations["get-my-account"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1927,6 +1967,15 @@ export interface components {
             /** @description How many ships are owned by the agent. */
             shipCount: number;
         };
+        /** @description Agent event details. */
+        AgentEvent: {
+            id: string;
+            type: string;
+            message: string;
+            data?: unknown;
+            /** Format: date-time */
+            createdAt: string;
+        };
         /** @description Ship details. */
         Ship: {
             /** @description The globally unique identifier of the ship in the following format: `[AGENT_SYMBOL]-[HEX_ID]` */
@@ -2939,6 +2988,28 @@ export interface operations {
             };
         };
     };
+    "get-my-agent-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["AgentEvent"][];
+                    };
+                };
+            };
+        };
+    };
     "get-my-ships": {
         parameters: {
             query?: {
@@ -2995,6 +3066,36 @@ export interface operations {
                             ship: components["schemas"]["Ship"];
                             agent: components["schemas"]["Agent"];
                             transaction: components["schemas"]["ShipyardTransaction"];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    "get-my-account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            account: {
+                                id: string;
+                                email: string | null;
+                                token?: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                            };
                         };
                     };
                 };

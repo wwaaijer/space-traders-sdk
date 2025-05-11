@@ -97,11 +97,8 @@ for (const [path, pathDefinition] of Object.entries(openApiDoc.paths)) {
     }
 
     if (hasRequestBody) {
-      const schema = operationDefinition.requestBody.content?.['application/json']?.schema;
-      const optional = schema?.type === 'object' && typeof schema?.required === 'undefined';
-
       // Required<...> is needed for users with strict null checks enabled, otherwise chaining on the optional property 'requestBody' will resolve to 'any' for them 
-      parameters.push(`requestBody${optional ? '?': ''}: Required<operations['${operationId}']>['requestBody']['content']['application/json']`);
+      parameters.push(`requestBody: Required<operations['${operationId}']>['requestBody']['content']['application/json']`);
     }
 
     // Determine if the operation has a 200 or 201 response

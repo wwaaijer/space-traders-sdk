@@ -6,14 +6,7 @@ An SDK for the [SpaceTraders API](https://spacetraders.io/), a game for (aspirin
 
 * Complete and fully typed
 * Simple and lightweight
-
-**But there are already a bunch of SDKs out there, why another one?**
-
-This package is trying to strike a balance between keeping up with changes and the developer experience.
-Most other packages are generated automatically using the OpenAPI Generator CLI, which can lead to less user-friendly interfaces.
-While this SDK also uses the OpenAPI spec, it only relies on [openapi-typescript](https://github.com/openapi-ts/openapi-typescript) to generate types.
-A custom script generates the SDK code itself.
-This approach results in a simpler, more lightweight SDK, still easy to maintain and keeping aligned with future changes to the SpaceTraders API.
+* Automatically generated but with a handcrafted feel
 
 ## Installation
 
@@ -82,6 +75,80 @@ import type { SpaceTradersSchemas } from '@wwaaijer/space-traders-sdk';
 export function getAgentCredits(agent: SpaceTradersSchemas['Agent']) {
   return agent.credits;
 }
+```
+
+## Method overview
+
+All methods map 1:1 to the SpaceTraders API endpoints.
+Names are based one the operation ID in the OpenAPI spec.
+Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
+If an endpoint only responds with a data object, the method will return that object.
+
+Last updated for SpaceTraders v2.3.0 API changes of 2025-05-11.
+
+```javascript
+getFactions(query?)
+getFaction(factionSymbol)
+getAgents(query?)
+getAgent(agentSymbol)
+getSupplyChain()
+getStatus()
+getSystems(query?)
+getSystem(systemSymbol)
+getSystemWaypoints(systemSymbol, query?)
+getWaypoint(waypointSymbol)
+getConstruction(waypointSymbol)
+supplyConstruction(waypointSymbol, requestBody)
+getMarket(waypointSymbol)
+getJumpGate(waypointSymbol)
+getShipyard(waypointSymbol)
+getContracts(query?)
+getContract(contractId)
+acceptContract(contractId)
+fulfillContract(contractId)
+deliverContract(contractId, requestBody)
+getMyFactions(query?)
+getMyAgent()
+getMyAgentEvents()
+getMyShips(query?)
+purchaseShip(requestBody)
+getMyAccount()
+getMyShip(shipSymbol)
+createChart(shipSymbol)
+negotiateContract(shipSymbol)
+getShipCooldown(shipSymbol)
+dockShip(shipSymbol)
+extractResources(shipSymbol)
+extractResourcesWithSurvey(shipSymbol, requestBody)
+jettison(shipSymbol, requestBody)
+jumpShip(shipSymbol, requestBody)
+createShipSystemScan(shipSymbol)
+createShipWaypointScan(shipSymbol)
+createShipShipScan(shipSymbol)
+scrapShip(shipSymbol)
+getScrapShip(shipSymbol)
+navigateShip(shipSymbol, requestBody)
+warpShip(shipSymbol, requestBody)
+orbitShip(shipSymbol)
+purchaseCargo(shipSymbol, requestBody)
+shipRefine(shipSymbol, requestBody)
+refuelShip(shipSymbol, requestBody)
+repairShip(shipSymbol)
+getRepairShip(shipSymbol)
+sellCargo(shipSymbol, requestBody)
+siphonResources(shipSymbol)
+createSurvey(shipSymbol)
+transferCargo(shipSymbol, requestBody)
+getMyShipCargo(shipSymbol)
+getShipModules(shipSymbol)
+installShipModule(shipSymbol, requestBody)
+removeShipModule(shipSymbol, requestBody)
+getMounts(shipSymbol)
+installMount(shipSymbol, requestBody)
+removeMount(shipSymbol, requestBody)
+getShipNav(shipSymbol)
+patchShipNav(shipSymbol, requestBody)
+register(requestBody)
 ```
 
 ## Errors
@@ -175,76 +242,13 @@ await api.getStatus();
 // }
 ```
 
-## Method overview
+## But there are already a bunch of SDKs out there, why another one?
 
-All methods map 1:1 to the SpaceTraders API endpoints.
-Names are based one the operation ID in the OpenAPI spec.
-Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
-If an endpoint only responds with a data object, the method will return that object.
-
-Last updated for SpaceTraders v2.3.0 API changes of 2025-03-23.
-
-```javascript
-getStatus();
-register(requestBody)
-getSystems(query)
-getSystem(systemSymbol)
-getSystemWaypoints(systemSymbol, query)
-getWaypoint(waypointSymbol)
-getMarket(waypointSymbol)
-getShipyard(waypointSymbol)
-getJumpGate(waypointSymbol)
-getConstruction(waypointSymbol)
-supplyConstruction(waypointSymbol, requestBody)
-getFactions(query)
-getFaction(factionSymbol)
-getMyAgent()
-getAgents(query)
-getAgent()
-getContracts(query)
-getContract(contractId)
-acceptContract(contractId)
-deliverContract(contractId, requestBody)
-fulfillContract(contractId)
-getMyShips(query)
-purchaseShip(requestBody)
-getMyShip(shipSymbol)
-getMyShipCargo(shipSymbol)
-orbitShip(shipSymbol)
-shipRefine(shipSymbol, requestBody)
-createChart(shipSymbol)
-getShipCooldown(shipSymbol)
-dockShip(shipSymbol)
-createSurvey(shipSymbol)
-extractResources(shipSymbol, requestBody)
-siphonResources(shipSymbol)
-extractResourcesWithSurvey(shipSymbol, requestBody)
-jettison(shipSymbol, requestBody)
-jumpShip(shipSymbol, requestBody)
-navigateShip(shipSymbol, requestBody)
-patchShipNav(shipSymbol, requestBody)
-getShipNav(shipSymbol)
-warpShip(shipSymbol, requestBody)
-sellCargo(shipSymbol, requestBody)
-createShipSystemScan(shipSymbol)
-createShipWaypointScan(shipSymbol)
-createShipShipScan(shipSymbol)
-refuelShip(shipSymbol, requestBody)
-purchaseCargo(shipSymbol, requestBody)
-transferCargo(shipSymbol, requestBody)
-negotiateContract(shipSymbol)
-getMounts(shipSymbol)
-installMount(shipSymbol, requestBody)
-removeMount(shipSymbol, requestBody)
-getScrapShip(shipSymbol)
-scrapShip(shipSymbol)
-getRepairShip(shipSymbol)
-repairShip(shipSymbol)
-getSupplyChain()
-getShipModules(shipSymbol)
-installShipModule(shipSymbol, requestBody)
-removeShipModule(shipSymbol, requestBody)
-```
+This package is trying to strike a balance between keeping up with changes and the developer experience.
+Most other packages are generated automatically using the OpenAPI Generator CLI, which can lead to less user-friendly interfaces.
+While this SDK also uses the OpenAPI spec, it only relies on [openapi-typescript](https://github.com/openapi-ts/openapi-typescript) to generate types.
+A custom script generates the SDK code itself.
+This approach results in a simpler, more lightweight SDK, still easy to maintain and keeping aligned with future changes to the SpaceTraders API.
 
 ## Regenerating the SDK source code
 Normal build:
@@ -253,6 +257,12 @@ Normal build:
 npm install
 npm run fetch-spec
 npm run build
+
+# Update the readme with the date and the output of:
+npm run generate-method-list
+
+# Update the changelog
+
 npm publish --access public
 ```
 
@@ -261,6 +271,6 @@ Staging build:
 # Bump version (including -staging)
 npm install
 npm run fetch-spec staging
-npm run build
+npm run build 
 npm publish --access public --tag staging
 ```

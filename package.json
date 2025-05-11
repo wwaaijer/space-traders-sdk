@@ -10,6 +10,7 @@
     "fetch-spec": "node ./scripts/fetch-spec.js",
     "generate-types": "openapi-typescript tmp/openapi-spec.json -o src/openapi-typescript-export.ts",
     "generate-sdk": "node ./scripts/generate-sdk.js",
+    "generate-method-list": "node ./scripts/generate-sdk.js readme",
     "transpile": "tsc",
     "build": "npm run generate-types && npm run generate-sdk && npm run transpile"
   },

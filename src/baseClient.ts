@@ -1,5 +1,5 @@
 import { SpaceTradersOptions } from ".";
-import { SpaceTradersError } from "./errors";
+import { SpaceTradersError, SpaceTradersErrorCode } from "./errors";
 import { RateLimiter } from "./rateLimiter";
 import { SpaceTradersRequest } from "./types";
 
@@ -15,48 +15,64 @@ export class BaseClient {
   }
 
   async request(request: SpaceTradersRequest) {
+    try {
+      return await this.limiter.enqueue(() => this.requestAttempt(request));
+    } catch (error) {
+      while (error instanceof SpaceTradersError && error.code === SpaceTradersErrorCode.rateLimitError) {
+        try {
+          return await this.limiter.retry(() => this.requestAttempt(request));  
+        } catch (retryError) {
+          error = retryError;
+        }
+      }
+
+      throw error;
+    }
+  }
+
+  async requestAttempt(request: SpaceTradersRequest) {
     let response: Response;
 
     try {
       if (this.options?.onRequest) {
         this.options.onRequest(request);
       }
-  
+
       const urlParts = [baseUrl, request.path];
       if (request.query) {
         urlParts.push(`?${buildQueryString(request.query)}`);
       }
       const url = urlParts.join('');
-  
+
       const fetchOptions: RequestInit = {
         method: request.method,
         headers: {},
       };
-  
+
       if (this.options?.token) {
         fetchOptions.headers['Authorization'] = `Bearer ${this.options.token}`;
       }
-  
+
       if (request.requestBody) {
         fetchOptions.headers['Content-Type'] = 'application/json';
         fetchOptions.body = JSON.stringify(request.requestBody);
       }
-  
-      response = await this.limiter.enqueue(() => fetch(url, fetchOptions));
-  
+
+      response = await fetch(url, fetchOptions);
+
       if (response.ok) {
         const responseBody = await response.json();
-  
+
         if (this.options?.onResponse) {
           this.options.onResponse({ request, responseBody });
         }
-  
+
         const responseKeys = Object.keys(responseBody);
-  
+
         if (responseKeys.length === 1 && responseKeys[0] === 'data') {
           return responseBody.data;
         }
-  
+
         return responseBody;
       } else {
         await handleErrorResponse(response);

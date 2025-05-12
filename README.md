@@ -173,8 +173,9 @@ try {
 
 ## Rate limiting
 
-Currently there is very basic rate limiting set up.
-Every instance of `SpaceTradersSdk` will only execute a request every 0.5 seconds.
+The SDK will automatically handle rate limiting for you.
+It will spread out requests consistently over the 2 requests per second and 30 requests per minute limits.
+If the rate limit is exceeded, the SDK will automatically retry the requests which are rate limited.
 
 ## Logging
 
@@ -240,6 +241,24 @@ await api.getStatus();
 //   arguments: [],
 //   result: { ... } 
 // }
+```
+
+And finally, you can also listen for errors with the `onError` callback.
+```ts
+import { SpaceTradersSdk } from '@wwaaijer/space-traders-sdk';
+
+const api = new SpaceTradersSdk({
+  onError(data) {
+    console.error('Error:', data.error);
+    console.error('Request:', data.request);
+    console.error('Response:', data.response);
+  },
+});
+
+await api.getWaypoint('X1-1-1');
+// Error: SpaceTradersError: System X1-1 not found.
+// Request: { method: 'GET', path: '/systems/X1-1/waypoints/X1-1-1' }
+// Response: { status: 404, ... }
 ```
 
 ## But there are already a bunch of SDKs out there, why another one?

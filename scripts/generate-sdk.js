@@ -2,14 +2,14 @@ const openApiDoc = require('../tmp/openapi-spec.json');
 const fs = require('fs');
 
 // TODO:
-// [ ] Rate limiting errors
-// [ ] Proper rate limiting?
 // [ ] Paged endpoint fetcher
 // [ ] Introduce extra methods using the paged fetcher?
+// [ ] Update typescript and openapi-typescript to the latest version
 // ...
 // [ ] Are there settings to fine-tune for openapi-typescript?
 //        Currently not even using the whole paths object/interface
 //        Switch to the Node API of openapi-typescript and strip that whole section from the `ts.node[]` return value?
+//     [ ] Simply remove the whole paths object/interface from the generated typescript file?
 // [ ] Use ts.nodes like openapi-typescript does?
 
 const mode = process.argv[2];

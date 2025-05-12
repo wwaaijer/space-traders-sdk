@@ -1,10 +1,6 @@
 // Currently not automatable 
 // Based on: https://docs.spacetraders.io/api-guide/response-errors
 
-export function responseText() {
-
-}
-
 export class SpaceTradersError extends Error {
   code: SpaceTradersErrorCode;
   data?: any;
@@ -17,6 +13,7 @@ export class SpaceTradersError extends Error {
 }
 
 export enum SpaceTradersErrorCode {
+  rateLimitError = 429,
   // General Error Codes
   cooldownConflictError = 4000,
   waypointNoAccessError = 4001,

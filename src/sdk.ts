@@ -86,7 +86,7 @@ export class SpaceTradersSdk {
   }
 
   /**
-   * Get the status of the game server.
+   * Server status
    * @description Return the status of the game server.
    *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
    */
@@ -94,6 +94,17 @@ export class SpaceTradersSdk {
     return this.client.request({
       method: 'GET',
       path: `/`,
+    });
+  }
+
+  /**
+   * Error code list
+   * @description Return a list of all possible error codes thrown by the game server.
+   */
+  async getErrorCodes(): Promise<operations['get-error-codes']['responses']['200']['content']['application/json']> {
+    return this.client.request({
+      method: 'GET',
+      path: `/error-codes`,
     });
   }
 

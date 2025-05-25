@@ -84,7 +84,7 @@ Names are based one the operation ID in the OpenAPI spec.
 Path parameters are passed as arguments, query parameters and request bodies are passed as objects.
 If an endpoint only responds with a data object, the method will return that object.
 
-Last updated for SpaceTraders v2.3.0 API changes of 2025-05-11.
+Last updated for SpaceTraders API changes of 2025-05-25.
 
 ```javascript
 getFactions(query?)
@@ -93,6 +93,7 @@ getAgents(query?)
 getAgent(agentSymbol)
 getSupplyChain()
 getStatus()
+getErrorCodes()
 getSystems(query?)
 getSystem(systemSymbol)
 getSystemWaypoints(systemSymbol, query?)

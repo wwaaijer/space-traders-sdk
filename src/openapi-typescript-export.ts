@@ -4,72 +4,6 @@
  */
 
 export interface paths {
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/metrics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/factions": {
         parameters: {
             query?: never;
@@ -178,11 +112,31 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get the status of the game server.
+         * Server status
          * @description Return the status of the game server.
          *     This also includes a few global elements, such as announcements, server reset dates and leaderboards.
          */
         get: operations["get-status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/error-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Error code list
+         * @description Return a list of all possible error codes thrown by the game server.
+         */
+        get: operations["get-error-codes"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2453,6 +2407,10 @@ export interface operations {
                             /** @description Total number of waypoints in the game. */
                             waypoints: number;
                         };
+                        health: {
+                            /** @description The date/time when the market was last updated. */
+                            lastMarketUpdate?: string;
+                        };
                         leaderboards: {
                             /** @description Top agents with the most credits. */
                             mostCredits: {
@@ -2486,6 +2444,31 @@ export interface operations {
                             name: string;
                             /** Format: uri */
                             url: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    "get-error-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fetched error codes successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        errorCodes: {
+                            code: number;
+                            name: string;
                         }[];
                     };
                 };
@@ -2554,7 +2537,7 @@ export interface operations {
                 /** @description Filter waypoints by type. */
                 type?: components["schemas"]["WaypointType"];
                 /** @description Filter waypoints by one or more traits. */
-                traits?: components["schemas"]["WaypointTraitSymbol"][];
+                traits?: components["schemas"]["WaypointTraitSymbol"][] | components["schemas"]["WaypointTraitSymbol"];
             };
             header?: never;
             path: {
@@ -3735,8 +3718,9 @@ export interface operations {
                      * @default false
                      * @example false
                      */
-                    fromCargo?: boolean;
+                    fromCargo?: boolean | null;
                 };
+                "text/plain": string;
             };
         };
         responses: {
@@ -4252,11 +4236,6 @@ export interface operations {
                      */
                     symbol: string;
                     faction: components["schemas"]["FactionSymbol"];
-                    /**
-                     * Format: email
-                     * @description Your email address. This is used if you reserved your call sign between resets.
-                     */
-                    email?: string;
                 };
             };
         };
